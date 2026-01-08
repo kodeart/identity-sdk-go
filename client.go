@@ -7,6 +7,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 
@@ -41,8 +42,22 @@ func NewClient(addr string) (*Client, error) {
 	log.Info().Msgf("connecting to Identity Service at %s", addr)
 	conn, err := grpc.NewClient(addr, opts...)
 	if err != nil {
-		return nil, err //fmt.Errorf("could not connect to identity platform: %w", err)
+		return nil, err
 	}
+
+	// Trigger connection, force the background connector to start immediately
+	conn.Connect()
+
+	// Some sanity check
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	if !conn.WaitForStateChange(ctx, connectivity.Ready) {
+		log.Warn().Msgf("Identity Service not ready yet, proceeding in background...")
+	} else {
+		log.Info().Msgf("Identity Service connection established")
+	}
+
 	return &Client{
 		grpcsvc: pb.NewIdentityServiceClient(conn),
 		conn:    conn,
