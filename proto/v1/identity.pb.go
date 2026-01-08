@@ -102,8 +102,7 @@ type isAuthenticateRequest_Credentials interface {
 }
 
 type AuthenticateRequest_ProviderToken struct {
-	// for "bring your own token" from Clerk, Firebase, etc
-	ProviderToken string `protobuf:"bytes,2,opt,name=provider_token,json=providerToken,proto3,oneof"`
+	ProviderToken string `protobuf:"bytes,2,opt,name=provider_token,json=providerToken,proto3,oneof"` // for "bring your own token" from Clerk, Firebase, etc
 }
 
 type AuthenticateRequest_Credential struct {
