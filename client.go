@@ -3,9 +3,12 @@ package identity
 import (
 	"context"
 	"fmt"
+	"time"
 
+	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 
 	pb "github.com/kodeart/identity-sdk-go/proto/v1"
 )
@@ -16,9 +19,27 @@ type Client struct {
 }
 
 func NewClient(addr string) (*Client, error) {
-	conn, err := grpc.NewClient(addr,
+	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                10 * time.Second,
+			Timeout:             time.Second,
+			PermitWithoutStream: true,
+		}),
+		grpc.WithDefaultServiceConfig(`{
+        "methodConfig": [{
+            "name": [{"service": ""}], 
+            "retryPolicy": {
+                "maxAttempts": 5,
+                "initialBackoff": "0.1s",
+                "maxBackoff": "1s",
+                "backoffMultiplier": 2.0,
+                "retryableStatusCodes": ["UNAVAILABLE"]
+            }
+        }]}`),
+	}
+	log.Info().Msgf("connecting to Identity Service at %s", addr)
+	conn, err := grpc.NewClient(addr, opts...)
 	if err != nil {
 		return nil, err //fmt.Errorf("could not connect to identity platform: %w", err)
 	}
