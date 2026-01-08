@@ -102,7 +102,8 @@ type isAuthenticateRequest_Credentials interface {
 }
 
 type AuthenticateRequest_ProviderToken struct {
-	ProviderToken string `protobuf:"bytes,2,opt,name=provider_token,json=providerToken,proto3,oneof"` // for "bring your own token" from Clerk, Firebase, etc
+	// for "bring your own token" from Clerk, Firebase, etc
+	ProviderToken string `protobuf:"bytes,2,opt,name=provider_token,json=providerToken,proto3,oneof"`
 }
 
 type AuthenticateRequest_Credential struct {
@@ -278,9 +279,10 @@ func (x *ValidateSessionRequest) GetToken() string {
 }
 
 type ValidateSessionResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Valid         bool                   `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
-	User          *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"` // Returns the user context is valid
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Valid bool                   `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	// Returns the user context if valid
+	User          *User `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -652,12 +654,13 @@ func (x *CreateTenantRequest) GetSlug() string {
 }
 
 type User struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	TenantId      string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,4,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	Metadata      *structpb.Struct       `protobuf:"bytes,5,opt,name=metadata,proto3" json:"metadata,omitempty"` // metadata stores provider specific data
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Email       string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	TenantId    string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
+	DisplayName string                 `protobuf:"bytes,4,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	// metadata stores provider specific data
+	Metadata      *structpb.Struct       `protobuf:"bytes,5,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	LastLogin     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=last_login,json=lastLogin,proto3" json:"last_login,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
