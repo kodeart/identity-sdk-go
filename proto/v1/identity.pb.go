@@ -886,7 +886,7 @@ const file_v1_identity_proto_rawDesc = "" +
 	"\n" +
 	"UpdateUser\x12\x1e.identity.v1.UpdateUserRequest\x1a\x11.identity.v1.User\x12?\n" +
 	"\tGetTenant\x12\x1d.identity.v1.GetTenantRequest\x1a\x13.identity.v1.Tenant\x12E\n" +
-	"\fCreateTenant\x12 .identity.v1.CreateTenantRequest\x1a\x13.identity.v1.TenantB?Z=github.com/kodeart/identity-module/sdk/go/proto/v1;identityv1b\x06proto3"
+	"\fCreateTenant\x12 .identity.v1.CreateTenantRequest\x1a\x13.identity.v1.TenantB8Z6github.com/kodeart/identity-sdk-go/proto/v1;identityv1b\x06proto3"
 
 var (
 	file_v1_identity_proto_rawDescOnce sync.Once
