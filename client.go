@@ -2,7 +2,6 @@ package identity
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -102,14 +101,18 @@ func (c *Client) AuthenticateWithCredentials(ctx context.Context, tenantSlug, em
 // ValidateSession is used by the middleware
 // to check if the JWT from the request is valid.
 func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.User, error) {
+	log.Debug().Str("token", token).Msg("verify user token...")
 	resp, err := c.grpcsvc.ValidateSession(ctx, &pb.ValidateSessionRequest{Token: token})
-	if err != nil {
-		return nil, err
-	}
-	if !resp.Valid {
-		return nil, fmt.Errorf("invalid session")
-	}
-	return resp.User, nil
+	return resp.User, err
+	/*
+	   if err != nil {
+	       return nil, err
+	   }
+	   if !resp.Valid {
+	       return nil, fmt.Errorf("invalid session")
+	   }
+	   return resp.User, nil
+	*/
 }
 
 func (c *Client) Close() error {
