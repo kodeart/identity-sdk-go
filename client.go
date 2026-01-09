@@ -19,8 +19,20 @@ type Client struct {
 	conn    *grpc.ClientConn
 }
 
-func NewClient(addr string) (*Client, error) {
+// NewClient creates a new gRPC "channel" for the target URI provided.
+//
+// The target name syntax is defined in
+// https://github.com/grpc/grpc/blob/master/doc/naming.md.  E.g. to use the dns
+// name resolver, a "dns:///" prefix may be applied to the target.  The default
+// name resolver will be used if no scheme is detected, or if the parsed scheme
+// is not a registered name resolver. The default resolver is "dns" but can be overridden.
+//
+// The authority is a value to be used as the :authority pseudo-header and as
+// the server name in authentication handshake. This overrides all other ways
+// of setting authority on the channel, but can be overridden per-call by using grpc.CallAuthority.
+func NewClient(target, authority string) (*Client, error) {
 	opts := []grpc.DialOption{
+		grpc.WithAuthority(authority),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
 			Time:                10 * time.Second,
@@ -39,8 +51,8 @@ func NewClient(addr string) (*Client, error) {
             }
         }]}`),
 	}
-	log.Info().Msgf("connecting to Identity Service at %s", addr)
-	conn, err := grpc.NewClient(addr, opts...)
+	log.Info().Msgf("connecting to Identity Service at %s", target)
+	conn, err := grpc.NewClient(target, opts...)
 	if err != nil {
 		return nil, err
 	}
