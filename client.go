@@ -105,11 +105,8 @@ func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.User, e
 	resp, err := c.grpcsvc.ValidateSession(ctx, &pb.ValidateSessionRequest{Token: token})
 	return resp.User, err
 	/*
-	   if err != nil {
+	   if err != nil || !resp.Valid {
 	       return nil, err
-	   }
-	   if !resp.Valid {
-	       return nil, fmt.Errorf("invalid session")
 	   }
 	   return resp.User, nil
 	*/
