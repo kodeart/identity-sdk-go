@@ -1,6 +1,7 @@
 package identity
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -10,10 +11,23 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// WithError converts a gRPC error to a problem.Problem
+// ProviderError represents an error structure returned by an
+// identity provider, which may include generic or detailed errors.
+type ProviderError struct {
+	// Generic style (i.e. Firebase, etc)
+	Error string `json:"error"`
+	// Clerk format
+	Errors []struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
+	} `json:"errors"`
+}
+
+// AsProblem converts a gRPC error to a problem.Problem
 // and attaches request-specific information if any.
-func WithError(r *http.Request, err error) *problem.Problem {
+func AsProblem(r *http.Request, err error) *problem.Problem {
 	st := status.Convert(err)
+	msg := st.Message()
 	scheme := "http"
 	if r.TLS != nil {
 		scheme = "https"
@@ -21,18 +35,29 @@ func WithError(r *http.Request, err error) *problem.Problem {
 	p := &problem.Problem{
 		Status:   CodeToHttpStatus(st.Code()),
 		Instance: fmt.Sprintf(" %s://%s%s", scheme, r.Host, r.RequestURI),
-		Detail:   st.Message(),
+		Detail:   msg,
 		Title:    st.Code().String(),
+	}
+	errs := make(map[string]any)
+	if json.Valid([]byte(msg)) {
+		var pErr ProviderError
+		if jsonErr := json.Unmarshal([]byte(msg), &pErr); jsonErr == nil {
+			p.Detail = "The identity provicer returned as error"
+			for _, e := range pErr.Errors {
+				errs[e.Code] = e.Message
+			}
+		}
 	}
 	// Extract SDK details (BadRequest / FieldViolations)
 	for _, detail := range st.Details() {
 		if t, ok := detail.(*errdetails.BadRequest); ok {
-			errs := make(map[string]any)
 			for _, v := range t.GetFieldViolations() {
 				errs[v.GetField()] = v.GetDescription()
 			}
-			p.WithExtension("errors", errs)
 		}
+	}
+	if len(errs) > 0 {
+		p.WithExtension("errors", errs)
 	}
 	return p
 }
