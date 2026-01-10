@@ -32,7 +32,13 @@ func AsProblem(r *http.Request, err error) *problem.Problem {
 		jsonPart := rawMsg[idx:]
 		var rawData map[string]any
 		if jsonErr := json.Unmarshal([]byte(jsonPart), &rawData); jsonErr == nil {
-			p.WithExtension("errors", rawData)
+			for k, v := range rawData {
+				if k == "errors" {
+					p.WithExtension("errors", v)
+				} else {
+					p.WithExtension(k, v)
+				}
+			}
 			p.Detail = strings.Trim(rawMsg[:idx], ": ")
 			if p.Detail == "" {
 				p.Detail = "The identity provider returned as error"
