@@ -4,13 +4,12 @@ import (
 	"context"
 	"time"
 
+	pb "github.com/kodeart/identity-sdk-go/proto/v1"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
-
-	pb "github.com/kodeart/identity-sdk-go/proto/v1"
 )
 
 type Client struct {
@@ -102,6 +101,7 @@ func (c *Client) AuthenticateWithCredentials(ctx context.Context, tenantSlug, em
 // to check if the JWT from the request is valid.
 func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.User, error) {
 	log.Debug().Str("token", token).Msg("verify user token...")
+
 	resp, err := c.grpcsvc.ValidateSession(ctx, &pb.ValidateSessionRequest{Token: token})
 	return resp.User, err
 	/*
