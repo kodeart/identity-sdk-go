@@ -4,114 +4,148 @@ import (
 	"context"
 	"time"
 
-	pb "github.com/kodeart/identity-sdk-go/proto/v1"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/status"
+
+	pb "github.com/kodeart/identity-sdk-go/proto/identity/v1"
 )
 
-type Client struct {
-	grpcsvc pb.IdentityServiceClient
-	conn    *grpc.ClientConn
+type contextKey string
+
+const UserContextKey contextKey = "identity"
+
+func GetUser(ctx context.Context) *pb.ValidateSessionResponse {
+	if user, ok := ctx.Value(UserContextKey).(*pb.ValidateSessionResponse); ok {
+		return user
+	}
+	return nil
 }
 
-// NewClient creates a new gRPC "channel" for the target URI provided.
-//
-// The target name syntax is defined in
-// https://github.com/grpc/grpc/blob/master/doc/naming.md.  E.g. to use the dns
-// name resolver, a "dns:///" prefix may be applied to the target.  The default
-// name resolver will be used if no scheme is detected, or if the parsed scheme
-// is not a registered name resolver. The default resolver is "dns" but can be overridden.
-//
-// The authority is a value to be used as the :authority pseudo-header and as
-// the server name in authentication handshake. This overrides all other ways
-// of setting authority on the channel, but can be overridden per-call by using grpc.CallAuthority.
-func NewClient(target, authority string) (*Client, error) {
-	opts := []grpc.DialOption{
+type Client struct {
+	svcAuth pb.AuthServiceClient
+	svcUser pb.UserServiceClient
+	grpccon *grpc.ClientConn
+	natscon *nats.Conn
+}
+
+type Option func(*clientConfig)
+
+type clientConfig struct {
+	connectTimeout   time.Duration
+	keepaliveTime    time.Duration
+	keepaliveTimeout time.Duration
+}
+
+func WithConnectTimeout(d time.Duration) Option {
+	return func(c *clientConfig) { c.connectTimeout = d }
+}
+
+func WithKeepalive(interval, timeout time.Duration) Option {
+	return func(c *clientConfig) {
+		c.keepaliveTime = interval
+		c.keepaliveTimeout = timeout
+	}
+}
+
+func NewClient(target, authority string, opts ...Option) (*Client, error) {
+	cfg := clientConfig{
+		connectTimeout:   5 * time.Second,
+		keepaliveTime:    20 * time.Second,
+		keepaliveTimeout: 20 * time.Second,
+	}
+	for _, o := range opts {
+		o(&cfg)
+	}
+
+	dialOpts := []grpc.DialOption{
 		grpc.WithAuthority(authority),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithChainUnaryInterceptor(
+			loggingInterceptor(),
+			errorInterceptor(),
+		),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                10 * time.Second,
-			Timeout:             time.Second,
 			PermitWithoutStream: true,
+			Time:                cfg.keepaliveTime,
+			Timeout:             cfg.keepaliveTimeout,
 		}),
-		grpc.WithDefaultServiceConfig(`{
-        "methodConfig": [{
-            "name": [{"service": ""}], 
-            "retryPolicy": {
-                "maxAttempts": 5,
-                "initialBackoff": "0.1s",
-                "maxBackoff": "1s",
-                "backoffMultiplier": 2.0,
-                "retryableStatusCodes": ["UNAVAILABLE"]
-            }
-        }]}`),
 	}
+
 	log.Info().Msgf("connecting to Identity Service at %s", target)
-	conn, err := grpc.NewClient(target, opts...)
+	conn, err := grpc.NewClient(target, dialOpts...)
 	if err != nil {
 		return nil, err
 	}
 
-	// Trigger connection, force the background connector to start immediately
-	conn.Connect()
-
-	// Some sanity check
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.connectTimeout)
 	defer cancel()
 
-	if !conn.WaitForStateChange(ctx, connectivity.Ready) {
-		log.Warn().Msgf("Identity Service not ready yet, proceeding in background...")
-	} else {
-		log.Info().Msgf("Identity Service connection established")
+	for {
+		state := conn.GetState()
+		if state == connectivity.Ready {
+			log.Info().Msg("Identity Service connection established")
+			break
+		}
+		if !conn.WaitForStateChange(ctx, state) {
+			log.Warn().Msg("Identity Service not ready yet (timeout), connecting in background...")
+			break
+		}
 	}
 
 	return &Client{
-		grpcsvc: pb.NewIdentityServiceClient(conn),
-		conn:    conn,
+		svcAuth: pb.NewAuthServiceClient(conn),
+		svcUser: pb.NewUserServiceClient(conn),
+		grpccon: conn,
 	}, nil
 }
 
-// AuthenticateWithProvider is what the frontend calls
-// after getting a token from the external auth provider.
-func (c *Client) AuthenticateWithProvider(ctx context.Context, tenantSlug, providerToken string) (*pb.AuthenticateResponse, error) {
-	return c.grpcsvc.Authenticate(ctx, &pb.AuthenticateRequest{
-		TenantSlug: tenantSlug,
-		Credentials: &pb.AuthenticateRequest_ProviderToken{
-			ProviderToken: providerToken,
-		},
-	})
-}
-
-func (c *Client) AuthenticateWithCredentials(ctx context.Context, tenantSlug, email, password string) (*pb.AuthenticateResponse, error) {
-	return c.grpcsvc.Authenticate(ctx, &pb.AuthenticateRequest{
-		TenantSlug: tenantSlug,
-		Credentials: &pb.AuthenticateRequest_Credential{
-			Credential: &pb.UserCredentials{
-				Email:    email,
-				Password: password,
-			},
-		},
-	})
-}
-
-// ValidateSession is used by the middleware
-// to check if the JWT from the request is valid.
-func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.User, error) {
-	log.Debug().Str("token", token).Msg("verify user token...")
-
-	resp, err := c.grpcsvc.ValidateSession(ctx, &pb.ValidateSessionRequest{Token: token})
-	return resp.User, err
-	/*
-	   if err != nil || !resp.Valid {
-	       return nil, err
-	   }
-	   return resp.User, nil
-	*/
-}
-
 func (c *Client) Close() error {
-	return c.conn.Close()
+	if c.natscon != nil {
+		if err := c.natscon.Drain(); err != nil {
+			return err
+		}
+	}
+	if c.grpccon != nil {
+		return c.grpccon.Close()
+	}
+	return nil
+}
+
+func errorInterceptor() grpc.UnaryClientInterceptor {
+	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		err := invoker(ctx, method, req, reply, cc, opts...)
+		if err != nil {
+			st, ok := status.FromError(err)
+			if !ok {
+				return status.Error(codes.Unavailable, "infrastructure-routing-failure")
+			}
+			if st.Code() == codes.Internal || st.Code() == codes.Unknown || st.Code() == codes.Unimplemented {
+				if len(st.Details()) > 0 {
+					return status.Error(codes.Unavailable, "backend-handshake-failure")
+				}
+			}
+		}
+		return err
+	}
+}
+
+func loggingInterceptor() grpc.UnaryClientInterceptor {
+	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		start := time.Now()
+		err := invoker(ctx, method, req, reply, cc, opts...)
+		duration := time.Since(start)
+		l := log.With().Str("method", method).Str("target", cc.Target()).Str("in", duration.String()).Logger()
+		if err != nil {
+			l.Error().Err(err).Msg("grpc client request failed")
+		} else {
+			l.Debug().Msg("grpc client")
+		}
+		return err
+	}
 }

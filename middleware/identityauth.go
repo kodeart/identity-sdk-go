@@ -5,45 +5,36 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kodeart/go-problem/v2"
 	"github.com/kodeart/identity-sdk-go"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// IdentityAuth is the core part of the identification of
-// any user against the configured external service provider.
-// This middleware is what is imported in all future projects
-// to resolve the user identity.
 func IdentityAuth(client *identity.Client) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			authHeader := r.Header.Get("Authorization")
-			if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-				problem.New().
-					WithDetail("Missing auth header").
-					WithTitle("Identity Not Authorized").
-					WithStatus(http.StatusUnauthorized).
-					WithInstance(r.URL.String()).
-					WithExtension("error", "Provide the authorization header").
-					JSON(w)
-
-				return
-			}
-			token := strings.TrimPrefix(authHeader, "Bearer ")
-			user, err := client.ValidateSession(r.Context(), token)
+			resp, err := client.ValidateSession(r.Context(), getAuthToken(r))
 			if err != nil {
-				problem.New().
-					WithDetail("Invalid Token").
-					WithTitle("Identity Not Authorized").
-					WithStatus(http.StatusUnauthorized).
-					WithInstance(r.URL.String()).
-					WithExtension("error", err.Error()).
-					JSON(w)
-
+				st, _ := status.FromError(err)
+				switch st.Code() {
+				case codes.Unimplemented, codes.Unavailable:
+					err = status.Error(codes.Unavailable, "identity service is unreachable")
+				case codes.Internal, codes.Unknown:
+					err = status.Error(codes.Internal, "identity service internal error")
+				}
+				identity.AsProblem(r, err).JSON(w)
 				return
 			}
-
-			ctx := context.WithValue(r.Context(), identity.UserContextKey, user)
+			ctx := context.WithValue(r.Context(), identity.UserContextKey, resp)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func getAuthToken(r *http.Request) string {
+	c, err := r.Cookie("access_token")
+	if err == nil {
+		return c.Value
+	}
+	return strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 }
