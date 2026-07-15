@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func AsProblem(r *http.Request, err error) *problem.Problem {
+func AsProblem(err error) *problem.Problem {
 	st := status.Convert(err)
 	statusCode := codeToHttpStatus(st.Code())
 	p := &problem.Problem{
