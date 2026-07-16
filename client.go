@@ -80,7 +80,7 @@ func NewClient(target, authority string, opts ...Option) (*Client, error) {
 
 	log.Info().Msgf("connecting to Identity Service at %s", target)
 
-	const maxRetries = 10
+	const maxRetries = 5
 	var conn *grpc.ClientConn
 
 	for attempt := range maxRetries {
@@ -88,6 +88,7 @@ func NewClient(target, authority string, opts ...Option) (*Client, error) {
 		if err != nil {
 			return nil, err
 		}
+		c.Connect()
 
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.connectTimeout)
 		ready := false
@@ -111,7 +112,7 @@ func NewClient(target, authority string, opts ...Option) (*Client, error) {
 
 		c.Close()
 		log.Warn().Int("attempt", attempt+1).Int("max", maxRetries).Msg("identity service not ready, retrying...")
-		time.Sleep(time.Duration(attempt+1) * time.Second)
+		time.Sleep(time.Duration(500<<attempt) * time.Millisecond)
 	}
 
 	if conn == nil {
