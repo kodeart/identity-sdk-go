@@ -80,7 +80,7 @@ func (x *SignInWithCredentialsRequest) GetPassword() string {
 
 type SignInProviderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProviderToken string                 `protobuf:"bytes,1,opt,name=provider_token,json=providerToken,proto3" json:"provider_token,omitempty"`
+	ProviderToken string                 `protobuf:"bytes,1,opt,name=providerToken,proto3" json:"providerToken,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,10 +125,10 @@ func (x *SignInProviderRequest) GetProviderToken() string {
 type SignInResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
-	AccessToken   string                 `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
-	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
-	TokenType     string                 `protobuf:"bytes,5,opt,name=token_type,json=tokenType,proto3" json:"token_type,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expiresAt,proto3" json:"expiresAt,omitempty"`
+	TokenType     string                 `protobuf:"bytes,5,opt,name=tokenType,proto3" json:"tokenType,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -200,7 +200,7 @@ func (x *SignInResponse) GetTokenType() string {
 
 type ValidateSessionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -244,10 +244,10 @@ func (x *ValidateSessionRequest) GetAccessToken() string {
 
 type ValidateSessionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=userId,proto3" json:"userId,omitempty"`
 	Scopes        []string               `protobuf:"bytes,3,rep,name=scopes,proto3" json:"scopes,omitempty"`
-	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expiresAt,proto3" json:"expiresAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -312,7 +312,7 @@ func (x *ValidateSessionResponse) GetExpiresAt() int64 {
 
 type RefreshTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -357,9 +357,9 @@ func (x *RefreshTokenRequest) GetRefreshToken() string {
 type RefreshTokenResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
-	AccessToken   string                 `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
-	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expiresAt,proto3" json:"expiresAt,omitempty"`
 	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -432,7 +432,7 @@ func (x *RefreshTokenResponse) GetType() string {
 
 type RevokeTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
 	All           bool                   `protobuf:"varint,2,opt,name=all,proto3" json:"all,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -520,15 +520,15 @@ func (*RevokeTokenResponse) Descriptor() ([]byte, []int) {
 
 type User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	TenantId      string                 `protobuf:"bytes,4,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
-	ExternalId    *string                `protobuf:"bytes,5,opt,name=external_id,json=externalId,proto3,oneof" json:"external_id,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	TenantId      string                 `protobuf:"bytes,4,opt,name=tenantId,proto3" json:"tenantId,omitempty"`
+	ExternalId    *string                `protobuf:"bytes,5,opt,name=externalId,proto3,oneof" json:"externalId,omitempty"`
 	Scopes        []string               `protobuf:"bytes,6,rep,name=scopes,proto3" json:"scopes,omitempty"`
-	LastLoginAt   int64                  `protobuf:"varint,7,opt,name=last_login_at,json=lastLoginAt,proto3" json:"last_login_at,omitempty"`
-	CreatedAt     int64                  `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                  `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	LastLoginAt   int64                  `protobuf:"varint,7,opt,name=lastLoginAt,proto3" json:"lastLoginAt,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,8,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt     int64                  `protobuf:"varint,9,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	Metadata      *structpb.Struct       `protobuf:"bytes,10,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -636,7 +636,7 @@ func (x *User) GetMetadata() *structpb.Struct {
 
 type GetUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -725,10 +725,10 @@ func (x *GetUserResponse) GetUser() *User {
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Credentials   *UserCredentials       `protobuf:"bytes,1,opt,name=credentials,proto3" json:"credentials,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
 	Scopes        []string               `protobuf:"bytes,3,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	Metadata      *structpb.Struct       `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	ExternalId    string                 `protobuf:"bytes,5,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
+	ExternalId    string                 `protobuf:"bytes,5,opt,name=externalId,proto3" json:"externalId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -843,23 +843,11 @@ func (x *CreateUserResponse) GetUser() *User {
 }
 
 type UpdateUserRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	UserId string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	User   *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"` // TODO remove this?
-	// repeated string scopes = 3 [
-	//
-	//	(buf.validate.field).repeated.unique = true
-	//
-	// ];
-	// map<string, string> metadata = 4 [
-	//
-	//	//(buf.validate.field).required = true,
-	//	(buf.validate.field).map.keys = {string: {min_len: 1}}
-	//
-	// ];
-	ExternalId string `protobuf:"bytes,3,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
-	// Client specifies which fields to update: "user.display_name,scopes"
-	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	User          *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	ExternalId    string                 `protobuf:"bytes,3,opt,name=externalId,proto3" json:"externalId,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,4,opt,name=updateMask,proto3" json:"updateMask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -968,7 +956,7 @@ func (x *UpdateUserResponse) GetUser() *User {
 
 type DeleteUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1010,7 +998,6 @@ func (x *DeleteUserRequest) GetUserId() string {
 	return ""
 }
 
-// Empty but explicit.
 type DeleteUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -1048,11 +1035,10 @@ func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
 }
 
 type ListUsersRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Size  int32                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
-	// Cursor-based pagination, not offset.
-	Page          string `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
-	Sort          string `protobuf:"bytes,3,opt,name=sort,proto3" json:"sort,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Size          int32                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
+	Page          string                 `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Sort          string                 `protobuf:"bytes,3,opt,name=sort,proto3" json:"sort,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1109,10 +1095,9 @@ func (x *ListUsersRequest) GetSort() string {
 }
 
 type ListUsersResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Users []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
-	// Next page token. Empty string means no more pages.
-	Next          string `protobuf:"bytes,2,opt,name=next,proto3" json:"next,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Users         []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	Next          string                 `protobuf:"bytes,2,opt,name=next,proto3" json:"next,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1161,12 +1146,11 @@ func (x *ListUsersResponse) GetNext() string {
 	return ""
 }
 
-// Requires current password — never allow password change without re-verification.
 type ChangePasswordRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	UserId          string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	CurrentPassword string                 `protobuf:"bytes,2,opt,name=current_password,json=currentPassword,proto3" json:"current_password,omitempty"`
-	NewPassword     string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	UserId          string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	CurrentPassword string                 `protobuf:"bytes,2,opt,name=currentPassword,proto3" json:"currentPassword,omitempty"`
+	NewPassword     string                 `protobuf:"bytes,3,opt,name=newPassword,proto3" json:"newPassword,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1258,12 +1242,11 @@ func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
 	return file_identity_v1_identity_proto_rawDescGZIP(), []int{21}
 }
 
-// Email change is a multi-step flow, not a direct write.
 type ChangeEmailRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	UserId          string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	CurrentPassword string                 `protobuf:"bytes,2,opt,name=current_password,json=currentPassword,proto3" json:"current_password,omitempty"` // re-auth required
-	NewEmail        string                 `protobuf:"bytes,3,opt,name=new_email,json=newEmail,proto3" json:"new_email,omitempty"`
+	UserId          string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	CurrentPassword string                 `protobuf:"bytes,2,opt,name=currentPassword,proto3" json:"currentPassword,omitempty"`
+	NewEmail        string                 `protobuf:"bytes,3,opt,name=newEmail,proto3" json:"newEmail,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1320,10 +1303,8 @@ func (x *ChangeEmailRequest) GetNewEmail() string {
 }
 
 type ChangeEmailResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Don't confirm the change here — trigger a verification email
-	// The actual email update happens when the user clicks the link
-	VerificationSent bool `protobuf:"varint,1,opt,name=verification_sent,json=verificationSent,proto3" json:"verification_sent,omitempty"`
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	VerificationSent bool                   `protobuf:"varint,1,opt,name=verificationSent,proto3" json:"verificationSent,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1366,9 +1347,8 @@ func (x *ChangeEmailResponse) GetVerificationSent() bool {
 }
 
 type PasswordResetRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// no auth required — unauthenticated flow
-	Email         string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1411,9 +1391,8 @@ func (x *PasswordResetRequest) GetEmail() string {
 }
 
 type PasswordResetResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// always return true to avoid email enumeration attacks
-	Sent          bool `protobuf:"varint,1,opt,name=sent,proto3" json:"sent,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Sent          bool                   `protobuf:"varint,1,opt,name=sent,proto3" json:"sent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1516,81 +1495,79 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02`\x01R\x05email\x12&\n" +
 	"\bpassword\x18\x02 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02\x10\aR\bpassword\"F\n" +
-	"\x15SignInProviderRequest\x12-\n" +
-	"\x0eprovider_token\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xb0\x01\n" +
+	"\xbaH\a\xc8\x01\x01r\x02\x10\aR\bpassword\"E\n" +
+	"\x15SignInProviderRequest\x12,\n" +
+	"\rproviderToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xac\x01\n" +
 	"\x0eSignInResponse\x12\x18\n" +
-	"\asubject\x18\x01 \x01(\tR\asubject\x12!\n" +
-	"\faccess_token\x18\x02 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x03 \x01(\tR\frefreshToken\x12\x1d\n" +
-	"\n" +
-	"expires_at\x18\x04 \x01(\x03R\texpiresAt\x12\x1d\n" +
-	"\n" +
-	"token_type\x18\x05 \x01(\tR\ttokenType\"C\n" +
-	"\x16ValidateSessionRequest\x12)\n" +
-	"\faccess_token\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\"\x8c\x01\n" +
-	"\x17ValidateSessionResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
-	"\x06scopes\x18\x03 \x03(\tR\x06scopes\x12\x1d\n" +
-	"\n" +
-	"expires_at\x18\x04 \x01(\x03R\texpiresAt\"B\n" +
-	"\x13RefreshTokenRequest\x12+\n" +
-	"\rrefresh_token\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\frefreshToken\"\xab\x01\n" +
+	"\asubject\x18\x01 \x01(\tR\asubject\x12 \n" +
+	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
+	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\x12\x1c\n" +
+	"\texpiresAt\x18\x04 \x01(\x03R\texpiresAt\x12\x1c\n" +
+	"\ttokenType\x18\x05 \x01(\tR\ttokenType\"B\n" +
+	"\x16ValidateSessionRequest\x12(\n" +
+	"\vaccessToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\"\x89\x01\n" +
+	"\x17ValidateSessionResponse\x12 \n" +
+	"\vaccessToken\x18\x01 \x01(\tR\vaccessToken\x12\x16\n" +
+	"\x06userId\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06scopes\x18\x03 \x03(\tR\x06scopes\x12\x1c\n" +
+	"\texpiresAt\x18\x04 \x01(\x03R\texpiresAt\"A\n" +
+	"\x13RefreshTokenRequest\x12*\n" +
+	"\frefreshToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\frefreshToken\"\xa8\x01\n" +
 	"\x14RefreshTokenResponse\x12\x18\n" +
-	"\asubject\x18\x01 \x01(\tR\asubject\x12!\n" +
-	"\faccess_token\x18\x02 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x03 \x01(\tR\frefreshToken\x12\x1d\n" +
-	"\n" +
-	"expires_at\x18\x04 \x01(\x03R\texpiresAt\x12\x12\n" +
-	"\x04type\x18\x05 \x01(\tR\x04type\"Q\n" +
-	"\x12RevokeTokenRequest\x12)\n" +
-	"\faccess_token\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\x12\x10\n" +
+	"\asubject\x18\x01 \x01(\tR\asubject\x12 \n" +
+	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
+	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\x12\x1c\n" +
+	"\texpiresAt\x18\x04 \x01(\x03R\texpiresAt\x12\x12\n" +
+	"\x04type\x18\x05 \x01(\tR\x04type\"P\n" +
+	"\x12RevokeTokenRequest\x12(\n" +
+	"\vaccessToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\x12\x10\n" +
 	"\x03all\x18\x02 \x01(\bR\x03all\"\x15\n" +
-	"\x13RevokeTokenResponse\"\xda\x02\n" +
-	"\x04User\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12!\n" +
-	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x1b\n" +
-	"\ttenant_id\x18\x04 \x01(\tR\btenantId\x12$\n" +
-	"\vexternal_id\x18\x05 \x01(\tH\x00R\n" +
+	"\x13RevokeTokenResponse\"\xd1\x02\n" +
+	"\x04User\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x12 \n" +
+	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName\x12\x1a\n" +
+	"\btenantId\x18\x04 \x01(\tR\btenantId\x12#\n" +
+	"\n" +
+	"externalId\x18\x05 \x01(\tH\x00R\n" +
 	"externalId\x88\x01\x01\x12\x16\n" +
-	"\x06scopes\x18\x06 \x03(\tR\x06scopes\x12\"\n" +
-	"\rlast_login_at\x18\a \x01(\x03R\vlastLoginAt\x12\x1d\n" +
-	"\n" +
-	"created_at\x18\b \x01(\x03R\tcreatedAt\x12\x1d\n" +
-	"\n" +
-	"updated_at\x18\t \x01(\x03R\tupdatedAt\x123\n" +
+	"\x06scopes\x18\x06 \x03(\tR\x06scopes\x12 \n" +
+	"\vlastLoginAt\x18\a \x01(\x03R\vlastLoginAt\x12\x1c\n" +
+	"\tcreatedAt\x18\b \x01(\x03R\tcreatedAt\x12\x1c\n" +
+	"\tupdatedAt\x18\t \x01(\x03R\tupdatedAt\x123\n" +
 	"\bmetadata\x18\n" +
-	" \x01(\v2\x17.google.protobuf.StructR\bmetadataB\x0e\n" +
-	"\f_external_id\"1\n" +
-	"\x0eGetUserRequest\x12\x1f\n" +
-	"\auser_id\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06userId\"8\n" +
+	" \x01(\v2\x17.google.protobuf.StructR\bmetadataB\r\n" +
+	"\v_externalId\"0\n" +
+	"\x0eGetUserRequest\x12\x1e\n" +
+	"\x06userId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06userId\"8\n" +
 	"\x0fGetUserResponse\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\x80\x02\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\xfe\x01\n" +
 	"\x11CreateUserRequest\x12F\n" +
-	"\vcredentials\x18\x01 \x01(\v2\x1c.identity.v1.UserCredentialsB\x06\xbaH\x03\xc8\x01\x01R\vcredentials\x12,\n" +
-	"\fdisplay_name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\vdisplayName\x12\x16\n" +
+	"\vcredentials\x18\x01 \x01(\v2\x1c.identity.v1.UserCredentialsB\x06\xbaH\x03\xc8\x01\x01R\vcredentials\x12+\n" +
+	"\vdisplayName\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\vdisplayName\x12\x16\n" +
 	"\x06scopes\x18\x03 \x03(\tR\x06scopes\x123\n" +
-	"\bmetadata\x18\x04 \x01(\v2\x17.google.protobuf.StructR\bmetadata\x12(\n" +
-	"\vexternal_id\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
+	"\bmetadata\x18\x04 \x01(\v2\x17.google.protobuf.StructR\bmetadata\x12'\n" +
+	"\n" +
+	"externalId\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
 	"externalId\";\n" +
 	"\x12CreateUserResponse\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\x88\x02\n" +
-	"\x11UpdateUserRequest\x12$\n" +
-	"\auser_id\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\x06userId\x12%\n" +
-	"\x04user\x18\x02 \x01(\v2\x11.identity.v1.UserR\x04user\x12(\n" +
-	"\vexternal_id\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
-	"externalId\x12|\n" +
-	"\vupdate_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskB?\xbaH<\xc8\x01\x01\xe2\x016\"4\n" +
-	"\x11user.display_name\n" +
-	"\vuser.scopes\n" +
-	"\x12user.last_login_atR\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\xfd\x01\n" +
+	"\x11UpdateUserRequest\x12#\n" +
+	"\x06userId\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\x06userId\x12%\n" +
+	"\x04user\x18\x02 \x01(\v2\x11.identity.v1.UserR\x04user\x12'\n" +
+	"\n" +
+	"externalId\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
+	"externalId\x12s\n" +
+	"\n" +
+	"updateMask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskB7\xbaH4\xc8\x01\x01\xe2\x01.\",\n" +
+	"\x10user.displayName\n" +
+	"\x06scopes\n" +
+	"\x10user.lastLoginAtR\n" +
 	"updateMask\";\n" +
 	"\x12UpdateUserResponse\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"6\n" +
-	"\x11DeleteUserRequest\x12!\n" +
-	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\"\x14\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"5\n" +
+	"\x11DeleteUserRequest\x12 \n" +
+	"\x06userId\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\"\x14\n" +
 	"\x12DeleteUserResponse\"i\n" +
 	"\x10ListUsersRequest\x12\x1b\n" +
 	"\x04size\x18\x01 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x04size\x12\x12\n" +
@@ -1598,20 +1575,20 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x04sort\x18\x03 \x01(\tB\x10\xbaH\rr\vR\x03ascR\x04descR\x04sort\"P\n" +
 	"\x11ListUsersResponse\x12'\n" +
 	"\x05users\x18\x01 \x03(\v2\x11.identity.v1.UserR\x05users\x12\x12\n" +
-	"\x04next\x18\x02 \x01(\tR\x04next\"\xa6\x02\n" +
-	"\x15ChangePasswordRequest\x12\x1f\n" +
-	"\auser_id\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06userId\x121\n" +
-	"\x10current_password\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x0fcurrentPassword\x12*\n" +
-	"\fnew_password\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\aR\vnewPassword:\x8c\x01\xbaH\x88\x01\x1a\x85\x01\n" +
-	"\"new_pass_is_not_equal_current_pass\x123the new password must be different than the current\x1a*this.new_password != this.current_password\"\x18\n" +
-	"\x16ChangePasswordResponse\"\x93\x01\n" +
-	"\x12ChangeEmailRequest\x12!\n" +
-	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x121\n" +
-	"\x10current_password\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x0fcurrentPassword\x12'\n" +
-	"\tnew_email\x18\x03 \x01(\tB\n" +
-	"\xbaH\a\xc8\x01\x01r\x02`\x01R\bnewEmail\"B\n" +
-	"\x13ChangeEmailResponse\x12+\n" +
-	"\x11verification_sent\x18\x01 \x01(\bR\x10verificationSent\"8\n" +
+	"\x04next\x18\x02 \x01(\tR\x04next\"\xa1\x02\n" +
+	"\x15ChangePasswordRequest\x12\x1e\n" +
+	"\x06userId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06userId\x120\n" +
+	"\x0fcurrentPassword\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x0fcurrentPassword\x12)\n" +
+	"\vnewPassword\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\aR\vnewPassword:\x8a\x01\xbaH\x86\x01\x1a\x83\x01\n" +
+	"\"new_pass_is_not_equal_current_pass\x123the new password must be different than the current\x1a(this.newPassword != this.currentPassword\"\x18\n" +
+	"\x16ChangePasswordResponse\"\x90\x01\n" +
+	"\x12ChangeEmailRequest\x12 \n" +
+	"\x06userId\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x120\n" +
+	"\x0fcurrentPassword\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x0fcurrentPassword\x12&\n" +
+	"\bnewEmail\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xc8\x01\x01r\x02`\x01R\bnewEmail\"A\n" +
+	"\x13ChangeEmailResponse\x12*\n" +
+	"\x10verificationSent\x18\x01 \x01(\bR\x10verificationSent\"8\n" +
 	"\x14PasswordResetRequest\x12 \n" +
 	"\x05email\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02`\x01R\x05email\"+\n" +
@@ -1688,7 +1665,7 @@ var file_identity_v1_identity_proto_depIdxs = []int32{
 	27, // 3: identity.v1.CreateUserRequest.metadata:type_name -> google.protobuf.Struct
 	9,  // 4: identity.v1.CreateUserResponse.user:type_name -> identity.v1.User
 	9,  // 5: identity.v1.UpdateUserRequest.user:type_name -> identity.v1.User
-	28, // 6: identity.v1.UpdateUserRequest.update_mask:type_name -> google.protobuf.FieldMask
+	28, // 6: identity.v1.UpdateUserRequest.updateMask:type_name -> google.protobuf.FieldMask
 	9,  // 7: identity.v1.UpdateUserResponse.user:type_name -> identity.v1.User
 	9,  // 8: identity.v1.ListUsersResponse.users:type_name -> identity.v1.User
 	0,  // 9: identity.v1.AuthService.SignInWithCredentials:input_type -> identity.v1.SignInWithCredentialsRequest

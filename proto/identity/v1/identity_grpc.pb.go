@@ -30,15 +30,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	// SignInWithCredentials validates email/password against local DB and returns a session token.
 	SignInWithCredentials(ctx context.Context, in *SignInWithCredentialsRequest, opts ...grpc.CallOption) (*SignInResponse, error)
-	// SignInWithProvider verifies a provider token (Clerk, Firebase, etc) and returns a session token.
 	SignInWithProvider(ctx context.Context, in *SignInProviderRequest, opts ...grpc.CallOption) (*SignInResponse, error)
-	// ValidateSession is used by the SDK/Middleware to check if a token is still valid.
 	ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*ValidateSessionResponse, error)
-	// RefreshToken is used by the SDK to refresh the JWT tokens.
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
-	// RevokeToken invalidates a session. If all=true, revokes all sessions for the user.
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 }
 
@@ -104,15 +99,10 @@ func (c *authServiceClient) RevokeToken(ctx context.Context, in *RevokeTokenRequ
 // All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	// SignInWithCredentials validates email/password against local DB and returns a session token.
 	SignInWithCredentials(context.Context, *SignInWithCredentialsRequest) (*SignInResponse, error)
-	// SignInWithProvider verifies a provider token (Clerk, Firebase, etc) and returns a session token.
 	SignInWithProvider(context.Context, *SignInProviderRequest) (*SignInResponse, error)
-	// ValidateSession is used by the SDK/Middleware to check if a token is still valid.
 	ValidateSession(context.Context, *ValidateSessionRequest) (*ValidateSessionResponse, error)
-	// RefreshToken is used by the SDK to refresh the JWT tokens.
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
-	// RevokeToken invalidates a session. If all=true, revokes all sessions for the user.
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 }
 
