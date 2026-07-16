@@ -26,3 +26,11 @@ func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.Validat
 func (c *Client) RefreshToken(ctx context.Context, refreshToken string) (*pb.RefreshTokenResponse, error) {
 	return c.svcAuth.RefreshToken(ctx, &pb.RefreshTokenRequest{RefreshToken: refreshToken})
 }
+
+func (c *Client) RevokeToken(ctx context.Context, accessToken string, all bool) error {
+	_, err := c.svcAuth.RevokeToken(ctx, &pb.RevokeTokenRequest{
+		AccessToken: accessToken,
+		All:         all,
+	})
+	return err
+}

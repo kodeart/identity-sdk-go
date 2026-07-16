@@ -22,7 +22,7 @@ func IdentityAuth(client *identity.Client) func(http.Handler) http.Handler {
 				case codes.Internal, codes.Unknown:
 					err = status.Error(codes.Internal, "identity service internal error")
 				}
-				identity.AsProblem(r, err).JSON(w)
+				identity.AsProblem(err).JSON(w)
 				return
 			}
 			ctx := context.WithValue(r.Context(), identity.UserContextKey, resp)
