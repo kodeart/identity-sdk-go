@@ -124,7 +124,6 @@ func (x *SignInProviderRequest) GetProviderToken() string {
 
 type SignInResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"`
 	AccessToken   string                 `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
 	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expiresAt,proto3" json:"expiresAt,omitempty"`
@@ -162,13 +161,6 @@ func (x *SignInResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SignInResponse.ProtoReflect.Descriptor instead.
 func (*SignInResponse) Descriptor() ([]byte, []int) {
 	return file_identity_v1_identity_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *SignInResponse) GetSubject() string {
-	if x != nil {
-		return x.Subject
-	}
-	return ""
 }
 
 func (x *SignInResponse) GetAccessToken() string {
@@ -1505,9 +1497,8 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\aR\bpassword\"E\n" +
 	"\x15SignInProviderRequest\x12,\n" +
-	"\rproviderToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xd3\x01\n" +
-	"\x0eSignInResponse\x12\x18\n" +
-	"\asubject\x18\x01 \x01(\tR\asubject\x12 \n" +
+	"\rproviderToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xb9\x01\n" +
+	"\x0eSignInResponse\x12 \n" +
 	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
 	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\x12\x1c\n" +
 	"\texpiresAt\x18\x04 \x01(\x03R\texpiresAt\x12\x1c\n" +
