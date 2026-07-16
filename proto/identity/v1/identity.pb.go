@@ -129,6 +129,7 @@ type SignInResponse struct {
 	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	ExpiresAt     int64                  `protobuf:"varint,4,opt,name=expiresAt,proto3" json:"expiresAt,omitempty"`
 	TokenType     string                 `protobuf:"bytes,5,opt,name=tokenType,proto3" json:"tokenType,omitempty"`
+	User          *User                  `protobuf:"bytes,6,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -196,6 +197,13 @@ func (x *SignInResponse) GetTokenType() string {
 		return x.TokenType
 	}
 	return ""
+}
+
+func (x *SignInResponse) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
 }
 
 type ValidateSessionRequest struct {
@@ -1497,13 +1505,14 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02\x10\aR\bpassword\"E\n" +
 	"\x15SignInProviderRequest\x12,\n" +
-	"\rproviderToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xac\x01\n" +
+	"\rproviderToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\rproviderToken\"\xd3\x01\n" +
 	"\x0eSignInResponse\x12\x18\n" +
 	"\asubject\x18\x01 \x01(\tR\asubject\x12 \n" +
 	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
 	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\x12\x1c\n" +
 	"\texpiresAt\x18\x04 \x01(\x03R\texpiresAt\x12\x1c\n" +
-	"\ttokenType\x18\x05 \x01(\tR\ttokenType\"B\n" +
+	"\ttokenType\x18\x05 \x01(\tR\ttokenType\x12%\n" +
+	"\x04user\x18\x06 \x01(\v2\x11.identity.v1.UserR\x04user\"B\n" +
 	"\x16ValidateSessionRequest\x12(\n" +
 	"\vaccessToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\"\x89\x01\n" +
 	"\x17ValidateSessionResponse\x12 \n" +
@@ -1659,46 +1668,47 @@ var file_identity_v1_identity_proto_goTypes = []any{
 	(*fieldmaskpb.FieldMask)(nil),        // 28: google.protobuf.FieldMask
 }
 var file_identity_v1_identity_proto_depIdxs = []int32{
-	27, // 0: identity.v1.User.metadata:type_name -> google.protobuf.Struct
-	9,  // 1: identity.v1.GetUserResponse.user:type_name -> identity.v1.User
-	26, // 2: identity.v1.CreateUserRequest.credentials:type_name -> identity.v1.UserCredentials
-	27, // 3: identity.v1.CreateUserRequest.metadata:type_name -> google.protobuf.Struct
-	9,  // 4: identity.v1.CreateUserResponse.user:type_name -> identity.v1.User
-	9,  // 5: identity.v1.UpdateUserRequest.user:type_name -> identity.v1.User
-	28, // 6: identity.v1.UpdateUserRequest.updateMask:type_name -> google.protobuf.FieldMask
-	9,  // 7: identity.v1.UpdateUserResponse.user:type_name -> identity.v1.User
-	9,  // 8: identity.v1.ListUsersResponse.users:type_name -> identity.v1.User
-	0,  // 9: identity.v1.AuthService.SignInWithCredentials:input_type -> identity.v1.SignInWithCredentialsRequest
-	1,  // 10: identity.v1.AuthService.SignInWithProvider:input_type -> identity.v1.SignInProviderRequest
-	3,  // 11: identity.v1.AuthService.ValidateSession:input_type -> identity.v1.ValidateSessionRequest
-	5,  // 12: identity.v1.AuthService.RefreshToken:input_type -> identity.v1.RefreshTokenRequest
-	7,  // 13: identity.v1.AuthService.RevokeToken:input_type -> identity.v1.RevokeTokenRequest
-	10, // 14: identity.v1.UserService.Get:input_type -> identity.v1.GetUserRequest
-	12, // 15: identity.v1.UserService.Create:input_type -> identity.v1.CreateUserRequest
-	14, // 16: identity.v1.UserService.Update:input_type -> identity.v1.UpdateUserRequest
-	16, // 17: identity.v1.UserService.Delete:input_type -> identity.v1.DeleteUserRequest
-	18, // 18: identity.v1.UserService.List:input_type -> identity.v1.ListUsersRequest
-	20, // 19: identity.v1.UserService.ChangePassword:input_type -> identity.v1.ChangePasswordRequest
-	22, // 20: identity.v1.UserService.ChangeEmail:input_type -> identity.v1.ChangeEmailRequest
-	24, // 21: identity.v1.UserService.InitiatePasswordReset:input_type -> identity.v1.PasswordResetRequest
-	2,  // 22: identity.v1.AuthService.SignInWithCredentials:output_type -> identity.v1.SignInResponse
-	2,  // 23: identity.v1.AuthService.SignInWithProvider:output_type -> identity.v1.SignInResponse
-	4,  // 24: identity.v1.AuthService.ValidateSession:output_type -> identity.v1.ValidateSessionResponse
-	6,  // 25: identity.v1.AuthService.RefreshToken:output_type -> identity.v1.RefreshTokenResponse
-	8,  // 26: identity.v1.AuthService.RevokeToken:output_type -> identity.v1.RevokeTokenResponse
-	11, // 27: identity.v1.UserService.Get:output_type -> identity.v1.GetUserResponse
-	13, // 28: identity.v1.UserService.Create:output_type -> identity.v1.CreateUserResponse
-	15, // 29: identity.v1.UserService.Update:output_type -> identity.v1.UpdateUserResponse
-	17, // 30: identity.v1.UserService.Delete:output_type -> identity.v1.DeleteUserResponse
-	19, // 31: identity.v1.UserService.List:output_type -> identity.v1.ListUsersResponse
-	21, // 32: identity.v1.UserService.ChangePassword:output_type -> identity.v1.ChangePasswordResponse
-	23, // 33: identity.v1.UserService.ChangeEmail:output_type -> identity.v1.ChangeEmailResponse
-	25, // 34: identity.v1.UserService.InitiatePasswordReset:output_type -> identity.v1.PasswordResetResponse
-	22, // [22:35] is the sub-list for method output_type
-	9,  // [9:22] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	9,  // 0: identity.v1.SignInResponse.user:type_name -> identity.v1.User
+	27, // 1: identity.v1.User.metadata:type_name -> google.protobuf.Struct
+	9,  // 2: identity.v1.GetUserResponse.user:type_name -> identity.v1.User
+	26, // 3: identity.v1.CreateUserRequest.credentials:type_name -> identity.v1.UserCredentials
+	27, // 4: identity.v1.CreateUserRequest.metadata:type_name -> google.protobuf.Struct
+	9,  // 5: identity.v1.CreateUserResponse.user:type_name -> identity.v1.User
+	9,  // 6: identity.v1.UpdateUserRequest.user:type_name -> identity.v1.User
+	28, // 7: identity.v1.UpdateUserRequest.updateMask:type_name -> google.protobuf.FieldMask
+	9,  // 8: identity.v1.UpdateUserResponse.user:type_name -> identity.v1.User
+	9,  // 9: identity.v1.ListUsersResponse.users:type_name -> identity.v1.User
+	0,  // 10: identity.v1.AuthService.SignInWithCredentials:input_type -> identity.v1.SignInWithCredentialsRequest
+	1,  // 11: identity.v1.AuthService.SignInWithProvider:input_type -> identity.v1.SignInProviderRequest
+	3,  // 12: identity.v1.AuthService.ValidateSession:input_type -> identity.v1.ValidateSessionRequest
+	5,  // 13: identity.v1.AuthService.RefreshToken:input_type -> identity.v1.RefreshTokenRequest
+	7,  // 14: identity.v1.AuthService.RevokeToken:input_type -> identity.v1.RevokeTokenRequest
+	10, // 15: identity.v1.UserService.Get:input_type -> identity.v1.GetUserRequest
+	12, // 16: identity.v1.UserService.Create:input_type -> identity.v1.CreateUserRequest
+	14, // 17: identity.v1.UserService.Update:input_type -> identity.v1.UpdateUserRequest
+	16, // 18: identity.v1.UserService.Delete:input_type -> identity.v1.DeleteUserRequest
+	18, // 19: identity.v1.UserService.List:input_type -> identity.v1.ListUsersRequest
+	20, // 20: identity.v1.UserService.ChangePassword:input_type -> identity.v1.ChangePasswordRequest
+	22, // 21: identity.v1.UserService.ChangeEmail:input_type -> identity.v1.ChangeEmailRequest
+	24, // 22: identity.v1.UserService.InitiatePasswordReset:input_type -> identity.v1.PasswordResetRequest
+	2,  // 23: identity.v1.AuthService.SignInWithCredentials:output_type -> identity.v1.SignInResponse
+	2,  // 24: identity.v1.AuthService.SignInWithProvider:output_type -> identity.v1.SignInResponse
+	4,  // 25: identity.v1.AuthService.ValidateSession:output_type -> identity.v1.ValidateSessionResponse
+	6,  // 26: identity.v1.AuthService.RefreshToken:output_type -> identity.v1.RefreshTokenResponse
+	8,  // 27: identity.v1.AuthService.RevokeToken:output_type -> identity.v1.RevokeTokenResponse
+	11, // 28: identity.v1.UserService.Get:output_type -> identity.v1.GetUserResponse
+	13, // 29: identity.v1.UserService.Create:output_type -> identity.v1.CreateUserResponse
+	15, // 30: identity.v1.UserService.Update:output_type -> identity.v1.UpdateUserResponse
+	17, // 31: identity.v1.UserService.Delete:output_type -> identity.v1.DeleteUserResponse
+	19, // 32: identity.v1.UserService.List:output_type -> identity.v1.ListUsersResponse
+	21, // 33: identity.v1.UserService.ChangePassword:output_type -> identity.v1.ChangePasswordResponse
+	23, // 34: identity.v1.UserService.ChangeEmail:output_type -> identity.v1.ChangeEmailResponse
+	25, // 35: identity.v1.UserService.InitiatePasswordReset:output_type -> identity.v1.PasswordResetResponse
+	23, // [23:36] is the sub-list for method output_type
+	10, // [10:23] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_identity_v1_identity_proto_init() }
