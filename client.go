@@ -2,6 +2,7 @@ package identity
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/nats-io/nats.go"
@@ -55,7 +56,7 @@ func WithKeepalive(interval, timeout time.Duration) Option {
 
 func NewClient(target, authority string, opts ...Option) (*Client, error) {
 	cfg := clientConfig{
-		connectTimeout:   5 * time.Second,
+		connectTimeout:   3 * time.Second,
 		keepaliveTime:    20 * time.Second,
 		keepaliveTimeout: 20 * time.Second,
 	}
@@ -78,24 +79,43 @@ func NewClient(target, authority string, opts ...Option) (*Client, error) {
 	}
 
 	log.Info().Msgf("connecting to Identity Service at %s", target)
-	conn, err := grpc.NewClient(target, dialOpts...)
-	if err != nil {
-		return nil, err
-	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.connectTimeout)
-	defer cancel()
+	const maxRetries = 10
+	var conn *grpc.ClientConn
 
-	for {
-		state := conn.GetState()
-		if state == connectivity.Ready {
+	for attempt := range maxRetries {
+		c, err := grpc.NewClient(target, dialOpts...)
+		if err != nil {
+			return nil, err
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), cfg.connectTimeout)
+		ready := false
+		for {
+			state := c.GetState()
+			if state == connectivity.Ready {
+				ready = true
+				break
+			}
+			if !c.WaitForStateChange(ctx, state) {
+				break
+			}
+		}
+		cancel()
+
+		if ready {
+			conn = c
 			log.Info().Msg("Identity Service connection established")
 			break
 		}
-		if !conn.WaitForStateChange(ctx, state) {
-			log.Warn().Msg("Identity Service not ready yet (timeout), connecting in background...")
-			break
-		}
+
+		c.Close()
+		log.Warn().Int("attempt", attempt+1).Int("max", maxRetries).Msg("identity service not ready, retrying...")
+		time.Sleep(time.Duration(attempt+1) * time.Second)
+	}
+
+	if conn == nil {
+		return nil, fmt.Errorf("identity service unreachable after %d attempts", maxRetries)
 	}
 
 	return &Client{
