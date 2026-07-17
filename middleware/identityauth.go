@@ -18,7 +18,7 @@ import (
 func IdentityAuth(client *identity.Client) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			resp, err := client.ValidateSession(r.Context(), getAuthToken(r))
+			resp, err := client.ValidateSession(r.Context(), GetAuthToken(r))
 			if err != nil {
 				st, _ := status.FromError(err)
 				switch st.Code() {
@@ -39,7 +39,7 @@ func IdentityAuth(client *identity.Client) func(http.Handler) http.Handler {
 func IdentityAuthAutoRefresh(client *identity.Client, secretKey []byte, issuer string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			token := getAuthToken(r)
+			token := GetAuthToken(r)
 			if token == "" {
 				next.ServeHTTP(w, r)
 				return
@@ -112,7 +112,7 @@ func setAuthCookies(w http.ResponseWriter, accessToken, refreshToken string) {
 	})
 }
 
-func getAuthToken(r *http.Request) string {
+func GetAuthToken(r *http.Request) string {
 	c, err := r.Cookie("access_token")
 	if err == nil {
 		return c.Value
