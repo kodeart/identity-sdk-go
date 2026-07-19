@@ -19,7 +19,7 @@ func (c *Client) SignInWithProvider(ctx context.Context, providerToken string) (
 	})
 }
 
-func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.ValidateSessionResponse, error) {
+func (c *Client) ValidateSession(ctx context.Context, token string) (*pb.SessionUser, error) {
 	return c.svcAuth.ValidateSession(ctx, &pb.ValidateSessionRequest{AccessToken: token})
 }
 

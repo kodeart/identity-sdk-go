@@ -7,8 +7,7 @@ import (
     "strings"
 
     "github.com/golang-jwt/jwt/v5"
-    "github.com/kodeart/identity-sdk-go"
-    pb "github.com/kodeart/identity-sdk-go/proto/identity/v1"
+    identity "github.com/kodeart/identity-sdk-go"
     "github.com/rs/zerolog/log"
     "google.golang.org/grpc"
     "google.golang.org/grpc/metadata"
@@ -18,7 +17,7 @@ import (
 // Local verify fast-path (HMAC + expiry check, zero network calls).
 // On expiry: reads refresh_token cookie, calls RefreshToken via gRPC, sets new cookies.
 // On any other failure: passes through without auth (public route compatible).
-func AuthHTTP(client *identity.Client, secretKey []byte, issuer string) func(http.Handler) http.Handler {
+func AuthHTTP(client *identity.Client) func(http.Handler) http.Handler {
     return func(next http.Handler) http.Handler {
         return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
             token := GetAuthToken(r)
@@ -27,9 +26,9 @@ func AuthHTTP(client *identity.Client, secretKey []byte, issuer string) func(htt
                 return
             }
 
-            info, err := identity.VerifyToken(token, secretKey, issuer)
+            su, err := identity.VerifyToken(token, []byte(client.Config.JWTSecretKey), client.Config.JWTIssuer)
             if err == nil {
-                ctx := context.WithValue(r.Context(), identity.UserContextKey, newSessionResp(token, info))
+                ctx := context.WithValue(r.Context(), identity.UserContextKey, su)
                 next.ServeHTTP(w, r.WithContext(ctx))
                 return
             }
@@ -54,16 +53,15 @@ func AuthHTTP(client *identity.Client, secretKey []byte, issuer string) func(htt
                 return
             }
 
-            setAuthCookies(w, resp.AccessToken, resp.RefreshToken)
+            setAuthCookies(w, client.Config, resp.AccessToken, resp.RefreshToken)
 
-            info, err = identity.VerifyToken(resp.AccessToken, secretKey, issuer)
+            su, err = identity.VerifyToken(resp.AccessToken, []byte(client.Config.JWTSecretKey), client.Config.JWTIssuer)
             if err != nil {
                 log.Warn().Err(err).Msg("jwt auth: refreshed token invalid")
                 next.ServeHTTP(w, r)
                 return
             }
-
-            ctx := context.WithValue(r.Context(), identity.UserContextKey, newSessionResp(resp.AccessToken, info))
+            ctx := context.WithValue(r.Context(), identity.UserContextKey, su)
             next.ServeHTTP(w, r.WithContext(ctx))
         })
     }
@@ -72,7 +70,7 @@ func AuthHTTP(client *identity.Client, secretKey []byte, issuer string) func(htt
 // AuthGRPC is a gRPC server interceptor for authenticating incoming gRPC calls.
 // Local verify only (HMAC + expiry check). No refresh — gRPC has no cookie mechanism.
 // Invalid or missing tokens log a warning and pass through (no rejection).
-func AuthGRPC(secretKey []byte, issuer string) grpc.UnaryServerInterceptor {
+func AuthGRPC(client *identity.Client) grpc.UnaryServerInterceptor {
     return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
         md, ok := metadata.FromIncomingContext(ctx)
         if !ok {
@@ -87,44 +85,36 @@ func AuthGRPC(secretKey []byte, issuer string) grpc.UnaryServerInterceptor {
             return handler(ctx, req)
         }
         token := strings.TrimPrefix(auth, "Bearer ")
-
-        tokenInfo, err := identity.VerifyToken(token, secretKey, issuer)
+        su, err := identity.VerifyToken(token, []byte(client.Config.JWTSecretKey), client.Config.JWTIssuer)
         if err != nil {
             log.Warn().Err(err).Msg("jwt auth: invalid token")
             return handler(ctx, req)
         }
-
-        ctx = context.WithValue(ctx, identity.UserContextKey, &pb.ValidateSessionResponse{
-            AccessToken: token,
-            UserId:      tokenInfo.UserID,
-            ExpiresAt:   tokenInfo.ExpiresAt,
-        })
+        ctx = context.WithValue(ctx, identity.UserContextKey, su)
         return handler(ctx, req)
     }
 }
 
-func newSessionResp(token string, info *identity.TokenInfo) *pb.ValidateSessionResponse {
-    return &pb.ValidateSessionResponse{
-        AccessToken: token,
-        UserId:      info.UserID,
-        ExpiresAt:   info.ExpiresAt,
-    }
-}
-
-func setAuthCookies(w http.ResponseWriter, accessToken, refreshToken string) {
+func setAuthCookies(w http.ResponseWriter, cfg identity.ClientConfig, accessToken, refreshToken string) {
     http.SetCookie(w, &http.Cookie{
         Name:     "access_token",
         Value:    accessToken,
         Path:     "/",
-        HttpOnly: true,
+        Domain:   cfg.CookieDomain,
+        HttpOnly: cfg.CookieHttpOnly,
+        Secure:   cfg.CookieSecure,
         SameSite: http.SameSiteStrictMode,
+        MaxAge:   int(cfg.JWTTokenExpiry.Seconds()),
     })
     http.SetCookie(w, &http.Cookie{
         Name:     "refresh_token",
         Value:    refreshToken,
         Path:     "/",
-        HttpOnly: true,
+        Domain:   cfg.CookieDomain,
+        HttpOnly: cfg.CookieHttpOnly,
+        Secure:   cfg.CookieSecure,
         SameSite: http.SameSiteStrictMode,
+        MaxAge:   int(cfg.JWTRefreshExpiry.Seconds()),
     })
 }
 

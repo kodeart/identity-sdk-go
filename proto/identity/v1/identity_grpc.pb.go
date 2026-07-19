@@ -32,7 +32,7 @@ const (
 type AuthServiceClient interface {
 	SignInWithCredentials(ctx context.Context, in *SignInWithCredentialsRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	SignInWithProvider(ctx context.Context, in *SignInProviderRequest, opts ...grpc.CallOption) (*SignInResponse, error)
-	ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*ValidateSessionResponse, error)
+	ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*SessionUser, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 }
@@ -65,9 +65,9 @@ func (c *authServiceClient) SignInWithProvider(ctx context.Context, in *SignInPr
 	return out, nil
 }
 
-func (c *authServiceClient) ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*ValidateSessionResponse, error) {
+func (c *authServiceClient) ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*SessionUser, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ValidateSessionResponse)
+	out := new(SessionUser)
 	err := c.cc.Invoke(ctx, AuthService_ValidateSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func (c *authServiceClient) RevokeToken(ctx context.Context, in *RevokeTokenRequ
 type AuthServiceServer interface {
 	SignInWithCredentials(context.Context, *SignInWithCredentialsRequest) (*SignInResponse, error)
 	SignInWithProvider(context.Context, *SignInProviderRequest) (*SignInResponse, error)
-	ValidateSession(context.Context, *ValidateSessionRequest) (*ValidateSessionResponse, error)
+	ValidateSession(context.Context, *ValidateSessionRequest) (*SessionUser, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 }
@@ -119,7 +119,7 @@ func (UnimplementedAuthServiceServer) SignInWithCredentials(context.Context, *Si
 func (UnimplementedAuthServiceServer) SignInWithProvider(context.Context, *SignInProviderRequest) (*SignInResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SignInWithProvider not implemented")
 }
-func (UnimplementedAuthServiceServer) ValidateSession(context.Context, *ValidateSessionRequest) (*ValidateSessionResponse, error) {
+func (UnimplementedAuthServiceServer) ValidateSession(context.Context, *ValidateSessionRequest) (*SessionUser, error) {
 	return nil, status.Error(codes.Unimplemented, "method ValidateSession not implemented")
 }
 func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {

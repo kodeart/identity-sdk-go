@@ -20,16 +20,17 @@
 //
 // Three middlewares for three scenarios:
 //
-//  1. AuthHTTP(client, secretKey, issuer) — for REST apps consuming identity as a
-//     separate service. Local verify fast-path, gRPC refresh on expiry, sets new cookies.
+//  1. AuthHTTP(client) — for REST apps consuming identity as a separate service.
+//     Local verify fast-path, gRPC refresh on expiry, sets new cookies.
 //
-//  2. AuthGRPC(client, secretKey, issuer) — for gRPC servers that need to authenticate
-//     incoming gRPC calls via identity tokens. Local verify only, no refresh (gRPC has
-//     no cookie mechanism).
+//  2. AuthGRPC(client) — for gRPC servers that need to authenticate incoming gRPC
+//     calls via identity tokens. Local verify only, no refresh (gRPC has no cookie
+//     mechanism).
 //
 //  3. server.AuthHTTP(authSvc) — for apps that embed identity as a library (import pkg/
 //     directly). Calls IAuthService.ValidateSession and RefreshToken directly — same
 //     process, no gRPC.
 //
-// All three put the user ID in context. Access via identity.GetUser(ctx).
+// All three put *SessionUser in context. Access via identity.GetUser(ctx) (SDK)
+// or server.GetUser(ctx) (embedded).
 package middleware
