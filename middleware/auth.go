@@ -55,6 +55,7 @@ func AuthHTTP(client *identity.Client) func(http.Handler) http.Handler {
 
             setAuthCookies(w, client.Config, resp.AccessToken, resp.RefreshToken)
 
+            // TODO why VerifyToken here (second time) ?
             su, err = identity.VerifyToken(resp.AccessToken, []byte(client.Config.JWTSecretKey), client.Config.JWTIssuer)
             if err != nil {
                 log.Warn().Err(err).Msg("jwt auth: refreshed token invalid")
