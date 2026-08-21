@@ -10,12 +10,13 @@ import (
 
 type EventHandler func(data *nats.Msg) error
 
-func (c *Client) ConnectNATS(natsURL string) error {
-	nc, err := nats.Connect(natsURL,
+func (c *Client) ConnectNATS(natsURL string, opts ...nats.Option) error {
+	opts = append([]nats.Option{
 		nats.RetryOnFailedConnect(true),
 		nats.MaxReconnects(-1),
-		nats.ReconnectWait(2*time.Second),
-	)
+		nats.ReconnectWait(2 * time.Second),
+	}, opts...)
+	nc, err := nats.Connect(natsURL, opts...)
 	if err != nil {
 		return err
 	}
