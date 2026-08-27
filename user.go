@@ -27,14 +27,14 @@ func (c *Client) ListUsers(ctx context.Context, size int32, page, sort string) (
 	return resp.GetUsers(), resp.GetNext(), nil
 }
 
-func (c *Client) CreateUser(ctx context.Context, email, password, displayName string, scopes []string, externalId string) (*pb.User, error) {
+func (c *Client) CreateUser(ctx context.Context, email, password, displayName string, roles []string, externalId string) (*pb.User, error) {
 	resp, err := c.svcUser.Create(ctx, &pb.CreateUserRequest{
 		Credentials: &pb.UserCredentials{
 			Email:    email,
 			Password: password,
 		},
 		DisplayName: displayName,
-		Scopes:      scopes,
+		Roles:       roles,
 		ExternalId:  externalId,
 	})
 	if err != nil {

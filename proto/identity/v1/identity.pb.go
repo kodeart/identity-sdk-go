@@ -456,7 +456,9 @@ type User struct {
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
 	ExternalId    *string                `protobuf:"bytes,4,opt,name=externalId,proto3,oneof" json:"externalId,omitempty"`
-	Scopes        []string               `protobuf:"bytes,5,rep,name=scopes,proto3" json:"scopes,omitempty"`
+	Roles         []string               `protobuf:"bytes,5,rep,name=roles,proto3" json:"roles,omitempty"`
+	Permissions   []string               `protobuf:"bytes,12,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Exclusions    []string               `protobuf:"bytes,13,rep,name=exclusions,proto3" json:"exclusions,omitempty"`
 	CreatedBy     string                 `protobuf:"bytes,6,opt,name=createdBy,proto3" json:"createdBy,omitempty"`
 	LastLoginAt   int64                  `protobuf:"varint,7,opt,name=lastLoginAt,proto3" json:"lastLoginAt,omitempty"`
 	CreatedAt     int64                  `protobuf:"varint,8,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
@@ -525,9 +527,23 @@ func (x *User) GetExternalId() string {
 	return ""
 }
 
-func (x *User) GetScopes() []string {
+func (x *User) GetRoles() []string {
 	if x != nil {
-		return x.Scopes
+		return x.Roles
+	}
+	return nil
+}
+
+func (x *User) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *User) GetExclusions() []string {
+	if x != nil {
+		return x.Exclusions
 	}
 	return nil
 }
@@ -666,7 +682,9 @@ type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Credentials   *UserCredentials       `protobuf:"bytes,1,opt,name=credentials,proto3" json:"credentials,omitempty"`
 	DisplayName   string                 `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	Scopes        []string               `protobuf:"bytes,3,rep,name=scopes,proto3" json:"scopes,omitempty"`
+	Roles         []string               `protobuf:"bytes,3,rep,name=roles,proto3" json:"roles,omitempty"`
+	Permissions   []string               `protobuf:"bytes,12,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Exclusions    []string               `protobuf:"bytes,13,rep,name=exclusions,proto3" json:"exclusions,omitempty"`
 	Metadata      *structpb.Struct       `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	ExternalId    string                 `protobuf:"bytes,5,opt,name=externalId,proto3" json:"externalId,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -717,9 +735,23 @@ func (x *CreateUserRequest) GetDisplayName() string {
 	return ""
 }
 
-func (x *CreateUserRequest) GetScopes() []string {
+func (x *CreateUserRequest) GetRoles() []string {
 	if x != nil {
-		return x.Scopes
+		return x.Roles
+	}
+	return nil
+}
+
+func (x *CreateUserRequest) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *CreateUserRequest) GetExclusions() []string {
+	if x != nil {
+		return x.Exclusions
 	}
 	return nil
 }
@@ -1374,6 +1406,474 @@ func (x *PasswordResetResponse) GetSent() bool {
 	return false
 }
 
+type Role struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	ParentRole    string                 `protobuf:"bytes,4,opt,name=parentRole,proto3" json:"parentRole,omitempty"`
+	Permissions   []string               `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt     int64                  `protobuf:"varint,7,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Role) Reset() {
+	*x = Role{}
+	mi := &file_identity_v1_identity_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Role) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Role) ProtoMessage() {}
+
+func (x *Role) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Role.ProtoReflect.Descriptor instead.
+func (*Role) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *Role) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+func (x *Role) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Role) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Role) GetParentRole() string {
+	if x != nil {
+		return x.ParentRole
+	}
+	return ""
+}
+
+func (x *Role) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *Role) GetCreatedAt() int64 {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return 0
+}
+
+func (x *Role) GetUpdatedAt() int64 {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return 0
+}
+
+type CreateRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	ParentRole    string                 `protobuf:"bytes,3,opt,name=parentRole,proto3" json:"parentRole,omitempty"`
+	Permissions   []string               `protobuf:"bytes,4,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateRoleRequest) Reset() {
+	*x = CreateRoleRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateRoleRequest) ProtoMessage() {}
+
+func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateRoleRequest.ProtoReflect.Descriptor instead.
+func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *CreateRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetParentRole() string {
+	if x != nil {
+		return x.ParentRole
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+type GetRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRoleRequest) Reset() {
+	*x = GetRoleRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRoleRequest) ProtoMessage() {}
+
+func (x *GetRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRoleRequest.ProtoReflect.Descriptor instead.
+func (*GetRoleRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *GetRoleRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+type ListRolesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRolesRequest) Reset() {
+	*x = ListRolesRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRolesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRolesRequest) ProtoMessage() {}
+
+func (x *ListRolesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRolesRequest.ProtoReflect.Descriptor instead.
+func (*ListRolesRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{28}
+}
+
+type ListRolesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roles         []*Role                `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRolesResponse) Reset() {
+	*x = ListRolesResponse{}
+	mi := &file_identity_v1_identity_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRolesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRolesResponse) ProtoMessage() {}
+
+func (x *ListRolesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRolesResponse.ProtoReflect.Descriptor instead.
+func (*ListRolesResponse) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *ListRolesResponse) GetRoles() []*Role {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+type DeleteRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteRoleRequest) Reset() {
+	*x = DeleteRoleRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteRoleRequest) ProtoMessage() {}
+
+func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteRoleRequest.ProtoReflect.Descriptor instead.
+func (*DeleteRoleRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *DeleteRoleRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+type DeleteRoleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteRoleResponse) Reset() {
+	*x = DeleteRoleResponse{}
+	mi := &file_identity_v1_identity_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteRoleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteRoleResponse) ProtoMessage() {}
+
+func (x *DeleteRoleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteRoleResponse.ProtoReflect.Descriptor instead.
+func (*DeleteRoleResponse) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{31}
+}
+
+type SetRolePermissionsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	Permissions   []string               `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetRolePermissionsRequest) Reset() {
+	*x = SetRolePermissionsRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetRolePermissionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetRolePermissionsRequest) ProtoMessage() {}
+
+func (x *SetRolePermissionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetRolePermissionsRequest.ProtoReflect.Descriptor instead.
+func (*SetRolePermissionsRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *SetRolePermissionsRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+func (x *SetRolePermissionsRequest) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+type SetRoleParentRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	ParentRole    string                 `protobuf:"bytes,2,opt,name=parentRole,proto3" json:"parentRole,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetRoleParentRequest) Reset() {
+	*x = SetRoleParentRequest{}
+	mi := &file_identity_v1_identity_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetRoleParentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetRoleParentRequest) ProtoMessage() {}
+
+func (x *SetRoleParentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_v1_identity_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetRoleParentRequest.ProtoReflect.Descriptor instead.
+func (*SetRoleParentRequest) Descriptor() ([]byte, []int) {
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *SetRoleParentRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+func (x *SetRoleParentRequest) GetParentRole() string {
+	if x != nil {
+		return x.ParentRole
+	}
+	return ""
+}
+
 type SessionUser struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -1391,7 +1891,7 @@ type SessionUser struct {
 
 func (x *SessionUser) Reset() {
 	*x = SessionUser{}
-	mi := &file_identity_v1_identity_proto_msgTypes[25]
+	mi := &file_identity_v1_identity_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1403,7 +1903,7 @@ func (x *SessionUser) String() string {
 func (*SessionUser) ProtoMessage() {}
 
 func (x *SessionUser) ProtoReflect() protoreflect.Message {
-	mi := &file_identity_v1_identity_proto_msgTypes[25]
+	mi := &file_identity_v1_identity_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1416,7 +1916,7 @@ func (x *SessionUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionUser.ProtoReflect.Descriptor instead.
 func (*SessionUser) Descriptor() ([]byte, []int) {
-	return file_identity_v1_identity_proto_rawDescGZIP(), []int{25}
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *SessionUser) GetId() string {
@@ -1492,7 +1992,7 @@ type UserCredentials struct {
 
 func (x *UserCredentials) Reset() {
 	*x = UserCredentials{}
-	mi := &file_identity_v1_identity_proto_msgTypes[26]
+	mi := &file_identity_v1_identity_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1504,7 +2004,7 @@ func (x *UserCredentials) String() string {
 func (*UserCredentials) ProtoMessage() {}
 
 func (x *UserCredentials) ProtoReflect() protoreflect.Message {
-	mi := &file_identity_v1_identity_proto_msgTypes[26]
+	mi := &file_identity_v1_identity_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1517,7 +2017,7 @@ func (x *UserCredentials) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserCredentials.ProtoReflect.Descriptor instead.
 func (*UserCredentials) Descriptor() ([]byte, []int) {
-	return file_identity_v1_identity_proto_rawDescGZIP(), []int{26}
+	return file_identity_v1_identity_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UserCredentials) GetEmail() string {
@@ -1565,15 +2065,19 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\vaccessToken\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\vaccessToken\x12\x10\n" +
 	"\x03all\x18\x02 \x01(\bR\x03all\"/\n" +
 	"\x13RevokeTokenResponse\x12\x18\n" +
-	"\arevoked\x18\x01 \x01(\bR\arevoked\"\xef\x02\n" +
+	"\arevoked\x18\x01 \x01(\bR\arevoked\"\xaf\x03\n" +
 	"\x04User\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12 \n" +
 	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName\x12#\n" +
 	"\n" +
 	"externalId\x18\x04 \x01(\tH\x00R\n" +
-	"externalId\x88\x01\x01\x12\x16\n" +
-	"\x06scopes\x18\x05 \x03(\tR\x06scopes\x12\x1c\n" +
+	"externalId\x88\x01\x01\x12\x14\n" +
+	"\x05roles\x18\x05 \x03(\tR\x05roles\x12 \n" +
+	"\vpermissions\x18\f \x03(\tR\vpermissions\x12\x1e\n" +
+	"\n" +
+	"exclusions\x18\r \x03(\tR\n" +
+	"exclusions\x12\x1c\n" +
 	"\tcreatedBy\x18\x06 \x01(\tR\tcreatedBy\x12 \n" +
 	"\vlastLoginAt\x18\a \x01(\x03R\vlastLoginAt\x12\x1c\n" +
 	"\tcreatedAt\x18\b \x01(\x03R\tcreatedAt\x12\x1c\n" +
@@ -1585,27 +2089,32 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x0eGetUserRequest\x12\x1e\n" +
 	"\x06userId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06userId\"8\n" +
 	"\x0fGetUserResponse\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\xfe\x01\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\xbe\x02\n" +
 	"\x11CreateUserRequest\x12F\n" +
 	"\vcredentials\x18\x01 \x01(\v2\x1c.identity.v1.UserCredentialsB\x06\xbaH\x03\xc8\x01\x01R\vcredentials\x12+\n" +
-	"\vdisplayName\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\vdisplayName\x12\x16\n" +
-	"\x06scopes\x18\x03 \x03(\tR\x06scopes\x123\n" +
+	"\vdisplayName\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\vdisplayName\x12\x14\n" +
+	"\x05roles\x18\x03 \x03(\tR\x05roles\x12 \n" +
+	"\vpermissions\x18\f \x03(\tR\vpermissions\x12\x1e\n" +
+	"\n" +
+	"exclusions\x18\r \x03(\tR\n" +
+	"exclusions\x123\n" +
 	"\bmetadata\x18\x04 \x01(\v2\x17.google.protobuf.StructR\bmetadata\x12'\n" +
 	"\n" +
 	"externalId\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
 	"externalId\";\n" +
 	"\x12CreateUserResponse\x12%\n" +
-	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\xfd\x01\n" +
+	"\x04user\x18\x01 \x01(\v2\x11.identity.v1.UserR\x04user\"\x81\x02\n" +
 	"\x11UpdateUserRequest\x12#\n" +
 	"\x06userId\x18\x01 \x01(\tB\v\xbaH\b\xc8\x01\x01r\x03\xb0\x01\x01R\x06userId\x12%\n" +
 	"\x04user\x18\x02 \x01(\v2\x11.identity.v1.UserR\x04user\x12'\n" +
 	"\n" +
 	"externalId\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\n" +
-	"externalId\x12s\n" +
+	"externalId\x12w\n" +
 	"\n" +
-	"updateMask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskB7\xbaH4\xc8\x01\x01\xe2\x01.\",\n" +
+	"updateMask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskB;\xbaH8\xc8\x01\x01\xe2\x012\"0\n" +
 	"\x10user.displayName\n" +
-	"\x06scopes\n" +
+	"\n" +
+	"user.roles\n" +
 	"\x10user.lastLoginAtR\n" +
 	"updateMask\";\n" +
 	"\x12UpdateUserResponse\x12%\n" +
@@ -1637,7 +2146,40 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tB\n" +
 	"\xbaH\a\xc8\x01\x01r\x02`\x01R\x05email\"+\n" +
 	"\x15PasswordResetResponse\x12\x12\n" +
-	"\x04sent\x18\x01 \x01(\bR\x04sent\"\x89\x02\n" +
+	"\x04sent\x18\x01 \x01(\bR\x04sent\"\xd2\x01\n" +
+	"\x04Role\x12\x16\n" +
+	"\x06roleId\x18\x01 \x01(\tR\x06roleId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1e\n" +
+	"\n" +
+	"parentRole\x18\x04 \x01(\tR\n" +
+	"parentRole\x12 \n" +
+	"\vpermissions\x18\x05 \x03(\tR\vpermissions\x12\x1c\n" +
+	"\tcreatedAt\x18\x06 \x01(\x03R\tcreatedAt\x12\x1c\n" +
+	"\tupdatedAt\x18\a \x01(\x03R\tupdatedAt\"\x93\x01\n" +
+	"\x11CreateRoleRequest\x12\x1a\n" +
+	"\x04name\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x04name\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1e\n" +
+	"\n" +
+	"parentRole\x18\x03 \x01(\tR\n" +
+	"parentRole\x12 \n" +
+	"\vpermissions\x18\x04 \x03(\tR\vpermissions\"0\n" +
+	"\x0eGetRoleRequest\x12\x1e\n" +
+	"\x06roleId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06roleId\"\x12\n" +
+	"\x10ListRolesRequest\"<\n" +
+	"\x11ListRolesResponse\x12'\n" +
+	"\x05roles\x18\x01 \x03(\v2\x11.identity.v1.RoleR\x05roles\"3\n" +
+	"\x11DeleteRoleRequest\x12\x1e\n" +
+	"\x06roleId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06roleId\"\x14\n" +
+	"\x12DeleteRoleResponse\"]\n" +
+	"\x19SetRolePermissionsRequest\x12\x1e\n" +
+	"\x06roleId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06roleId\x12 \n" +
+	"\vpermissions\x18\x02 \x03(\tR\vpermissions\"V\n" +
+	"\x14SetRoleParentRequest\x12\x1e\n" +
+	"\x06roleId\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06roleId\x12\x1e\n" +
+	"\n" +
+	"parentRole\x18\x02 \x01(\tR\n" +
+	"parentRole\"\x89\x02\n" +
 	"\vSessionUser\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12 \n" +
@@ -1667,7 +2209,14 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x04List\x12\x1d.identity.v1.ListUsersRequest\x1a\x1e.identity.v1.ListUsersResponse\x12Y\n" +
 	"\x0eChangePassword\x12\".identity.v1.ChangePasswordRequest\x1a#.identity.v1.ChangePasswordResponse\x12P\n" +
 	"\vChangeEmail\x12\x1f.identity.v1.ChangeEmailRequest\x1a .identity.v1.ChangeEmailResponse\x12^\n" +
-	"\x15InitiatePasswordReset\x12!.identity.v1.PasswordResetRequest\x1a\".identity.v1.PasswordResetResponseB\xa5\x01\n" +
+	"\x15InitiatePasswordReset\x12!.identity.v1.PasswordResetRequest\x1a\".identity.v1.PasswordResetResponse2\xa3\x03\n" +
+	"\vRoleService\x12;\n" +
+	"\x06Create\x12\x1e.identity.v1.CreateRoleRequest\x1a\x11.identity.v1.Role\x125\n" +
+	"\x03Get\x12\x1b.identity.v1.GetRoleRequest\x1a\x11.identity.v1.Role\x12E\n" +
+	"\x04List\x12\x1d.identity.v1.ListRolesRequest\x1a\x1e.identity.v1.ListRolesResponse\x12I\n" +
+	"\x06Delete\x12\x1e.identity.v1.DeleteRoleRequest\x1a\x1f.identity.v1.DeleteRoleResponse\x12K\n" +
+	"\x0eSetPermissions\x12&.identity.v1.SetRolePermissionsRequest\x1a\x11.identity.v1.Role\x12A\n" +
+	"\tSetParent\x12!.identity.v1.SetRoleParentRequest\x1a\x11.identity.v1.RoleB\xa5\x01\n" +
 	"\x0fcom.identity.v1B\rIdentityProtoP\x01Z6github.com/kodeart/identity-sdk-go/proto/v1;identityv1\xa2\x02\x03IXX\xaa\x02\vIdentity.V1\xca\x02\vIdentity\\V1\xe2\x02\x17Identity\\V1\\GPBMetadata\xea\x02\fIdentity::V1b\x06proto3"
 
 var (
@@ -1682,7 +2231,7 @@ func file_identity_v1_identity_proto_rawDescGZIP() []byte {
 	return file_identity_v1_identity_proto_rawDescData
 }
 
-var file_identity_v1_identity_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_identity_v1_identity_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_identity_v1_identity_proto_goTypes = []any{
 	(*SignInWithCredentialsRequest)(nil), // 0: identity.v1.SignInWithCredentialsRequest
 	(*SignInProviderRequest)(nil),        // 1: identity.v1.SignInProviderRequest
@@ -1709,53 +2258,75 @@ var file_identity_v1_identity_proto_goTypes = []any{
 	(*ChangeEmailResponse)(nil),          // 22: identity.v1.ChangeEmailResponse
 	(*PasswordResetRequest)(nil),         // 23: identity.v1.PasswordResetRequest
 	(*PasswordResetResponse)(nil),        // 24: identity.v1.PasswordResetResponse
-	(*SessionUser)(nil),                  // 25: identity.v1.SessionUser
-	(*UserCredentials)(nil),              // 26: identity.v1.UserCredentials
-	(*structpb.Struct)(nil),              // 27: google.protobuf.Struct
-	(*fieldmaskpb.FieldMask)(nil),        // 28: google.protobuf.FieldMask
+	(*Role)(nil),                         // 25: identity.v1.Role
+	(*CreateRoleRequest)(nil),            // 26: identity.v1.CreateRoleRequest
+	(*GetRoleRequest)(nil),               // 27: identity.v1.GetRoleRequest
+	(*ListRolesRequest)(nil),             // 28: identity.v1.ListRolesRequest
+	(*ListRolesResponse)(nil),            // 29: identity.v1.ListRolesResponse
+	(*DeleteRoleRequest)(nil),            // 30: identity.v1.DeleteRoleRequest
+	(*DeleteRoleResponse)(nil),           // 31: identity.v1.DeleteRoleResponse
+	(*SetRolePermissionsRequest)(nil),    // 32: identity.v1.SetRolePermissionsRequest
+	(*SetRoleParentRequest)(nil),         // 33: identity.v1.SetRoleParentRequest
+	(*SessionUser)(nil),                  // 34: identity.v1.SessionUser
+	(*UserCredentials)(nil),              // 35: identity.v1.UserCredentials
+	(*structpb.Struct)(nil),              // 36: google.protobuf.Struct
+	(*fieldmaskpb.FieldMask)(nil),        // 37: google.protobuf.FieldMask
 }
 var file_identity_v1_identity_proto_depIdxs = []int32{
-	25, // 0: identity.v1.SignInResponse.user:type_name -> identity.v1.SessionUser
-	27, // 1: identity.v1.User.metadata:type_name -> google.protobuf.Struct
+	34, // 0: identity.v1.SignInResponse.user:type_name -> identity.v1.SessionUser
+	36, // 1: identity.v1.User.metadata:type_name -> google.protobuf.Struct
 	8,  // 2: identity.v1.GetUserResponse.user:type_name -> identity.v1.User
-	26, // 3: identity.v1.CreateUserRequest.credentials:type_name -> identity.v1.UserCredentials
-	27, // 4: identity.v1.CreateUserRequest.metadata:type_name -> google.protobuf.Struct
+	35, // 3: identity.v1.CreateUserRequest.credentials:type_name -> identity.v1.UserCredentials
+	36, // 4: identity.v1.CreateUserRequest.metadata:type_name -> google.protobuf.Struct
 	8,  // 5: identity.v1.CreateUserResponse.user:type_name -> identity.v1.User
 	8,  // 6: identity.v1.UpdateUserRequest.user:type_name -> identity.v1.User
-	28, // 7: identity.v1.UpdateUserRequest.updateMask:type_name -> google.protobuf.FieldMask
+	37, // 7: identity.v1.UpdateUserRequest.updateMask:type_name -> google.protobuf.FieldMask
 	8,  // 8: identity.v1.UpdateUserResponse.user:type_name -> identity.v1.User
 	8,  // 9: identity.v1.ListUsersResponse.users:type_name -> identity.v1.User
-	0,  // 10: identity.v1.AuthService.SignInWithCredentials:input_type -> identity.v1.SignInWithCredentialsRequest
-	1,  // 11: identity.v1.AuthService.SignInWithProvider:input_type -> identity.v1.SignInProviderRequest
-	3,  // 12: identity.v1.AuthService.ValidateSession:input_type -> identity.v1.ValidateSessionRequest
-	4,  // 13: identity.v1.AuthService.RefreshToken:input_type -> identity.v1.RefreshTokenRequest
-	6,  // 14: identity.v1.AuthService.RevokeToken:input_type -> identity.v1.RevokeTokenRequest
-	9,  // 15: identity.v1.UserService.Get:input_type -> identity.v1.GetUserRequest
-	11, // 16: identity.v1.UserService.Create:input_type -> identity.v1.CreateUserRequest
-	13, // 17: identity.v1.UserService.Update:input_type -> identity.v1.UpdateUserRequest
-	15, // 18: identity.v1.UserService.Delete:input_type -> identity.v1.DeleteUserRequest
-	17, // 19: identity.v1.UserService.List:input_type -> identity.v1.ListUsersRequest
-	19, // 20: identity.v1.UserService.ChangePassword:input_type -> identity.v1.ChangePasswordRequest
-	21, // 21: identity.v1.UserService.ChangeEmail:input_type -> identity.v1.ChangeEmailRequest
-	23, // 22: identity.v1.UserService.InitiatePasswordReset:input_type -> identity.v1.PasswordResetRequest
-	2,  // 23: identity.v1.AuthService.SignInWithCredentials:output_type -> identity.v1.SignInResponse
-	2,  // 24: identity.v1.AuthService.SignInWithProvider:output_type -> identity.v1.SignInResponse
-	25, // 25: identity.v1.AuthService.ValidateSession:output_type -> identity.v1.SessionUser
-	5,  // 26: identity.v1.AuthService.RefreshToken:output_type -> identity.v1.RefreshTokenResponse
-	7,  // 27: identity.v1.AuthService.RevokeToken:output_type -> identity.v1.RevokeTokenResponse
-	10, // 28: identity.v1.UserService.Get:output_type -> identity.v1.GetUserResponse
-	12, // 29: identity.v1.UserService.Create:output_type -> identity.v1.CreateUserResponse
-	14, // 30: identity.v1.UserService.Update:output_type -> identity.v1.UpdateUserResponse
-	16, // 31: identity.v1.UserService.Delete:output_type -> identity.v1.DeleteUserResponse
-	18, // 32: identity.v1.UserService.List:output_type -> identity.v1.ListUsersResponse
-	20, // 33: identity.v1.UserService.ChangePassword:output_type -> identity.v1.ChangePasswordResponse
-	22, // 34: identity.v1.UserService.ChangeEmail:output_type -> identity.v1.ChangeEmailResponse
-	24, // 35: identity.v1.UserService.InitiatePasswordReset:output_type -> identity.v1.PasswordResetResponse
-	23, // [23:36] is the sub-list for method output_type
-	10, // [10:23] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	25, // 10: identity.v1.ListRolesResponse.roles:type_name -> identity.v1.Role
+	0,  // 11: identity.v1.AuthService.SignInWithCredentials:input_type -> identity.v1.SignInWithCredentialsRequest
+	1,  // 12: identity.v1.AuthService.SignInWithProvider:input_type -> identity.v1.SignInProviderRequest
+	3,  // 13: identity.v1.AuthService.ValidateSession:input_type -> identity.v1.ValidateSessionRequest
+	4,  // 14: identity.v1.AuthService.RefreshToken:input_type -> identity.v1.RefreshTokenRequest
+	6,  // 15: identity.v1.AuthService.RevokeToken:input_type -> identity.v1.RevokeTokenRequest
+	9,  // 16: identity.v1.UserService.Get:input_type -> identity.v1.GetUserRequest
+	11, // 17: identity.v1.UserService.Create:input_type -> identity.v1.CreateUserRequest
+	13, // 18: identity.v1.UserService.Update:input_type -> identity.v1.UpdateUserRequest
+	15, // 19: identity.v1.UserService.Delete:input_type -> identity.v1.DeleteUserRequest
+	17, // 20: identity.v1.UserService.List:input_type -> identity.v1.ListUsersRequest
+	19, // 21: identity.v1.UserService.ChangePassword:input_type -> identity.v1.ChangePasswordRequest
+	21, // 22: identity.v1.UserService.ChangeEmail:input_type -> identity.v1.ChangeEmailRequest
+	23, // 23: identity.v1.UserService.InitiatePasswordReset:input_type -> identity.v1.PasswordResetRequest
+	26, // 24: identity.v1.RoleService.Create:input_type -> identity.v1.CreateRoleRequest
+	27, // 25: identity.v1.RoleService.Get:input_type -> identity.v1.GetRoleRequest
+	28, // 26: identity.v1.RoleService.List:input_type -> identity.v1.ListRolesRequest
+	30, // 27: identity.v1.RoleService.Delete:input_type -> identity.v1.DeleteRoleRequest
+	32, // 28: identity.v1.RoleService.SetPermissions:input_type -> identity.v1.SetRolePermissionsRequest
+	33, // 29: identity.v1.RoleService.SetParent:input_type -> identity.v1.SetRoleParentRequest
+	2,  // 30: identity.v1.AuthService.SignInWithCredentials:output_type -> identity.v1.SignInResponse
+	2,  // 31: identity.v1.AuthService.SignInWithProvider:output_type -> identity.v1.SignInResponse
+	34, // 32: identity.v1.AuthService.ValidateSession:output_type -> identity.v1.SessionUser
+	5,  // 33: identity.v1.AuthService.RefreshToken:output_type -> identity.v1.RefreshTokenResponse
+	7,  // 34: identity.v1.AuthService.RevokeToken:output_type -> identity.v1.RevokeTokenResponse
+	10, // 35: identity.v1.UserService.Get:output_type -> identity.v1.GetUserResponse
+	12, // 36: identity.v1.UserService.Create:output_type -> identity.v1.CreateUserResponse
+	14, // 37: identity.v1.UserService.Update:output_type -> identity.v1.UpdateUserResponse
+	16, // 38: identity.v1.UserService.Delete:output_type -> identity.v1.DeleteUserResponse
+	18, // 39: identity.v1.UserService.List:output_type -> identity.v1.ListUsersResponse
+	20, // 40: identity.v1.UserService.ChangePassword:output_type -> identity.v1.ChangePasswordResponse
+	22, // 41: identity.v1.UserService.ChangeEmail:output_type -> identity.v1.ChangeEmailResponse
+	24, // 42: identity.v1.UserService.InitiatePasswordReset:output_type -> identity.v1.PasswordResetResponse
+	25, // 43: identity.v1.RoleService.Create:output_type -> identity.v1.Role
+	25, // 44: identity.v1.RoleService.Get:output_type -> identity.v1.Role
+	29, // 45: identity.v1.RoleService.List:output_type -> identity.v1.ListRolesResponse
+	31, // 46: identity.v1.RoleService.Delete:output_type -> identity.v1.DeleteRoleResponse
+	25, // 47: identity.v1.RoleService.SetPermissions:output_type -> identity.v1.Role
+	25, // 48: identity.v1.RoleService.SetParent:output_type -> identity.v1.Role
+	30, // [30:49] is the sub-list for method output_type
+	11, // [11:30] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_identity_v1_identity_proto_init() }
@@ -1770,9 +2341,9 @@ func file_identity_v1_identity_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_identity_v1_identity_proto_rawDesc), len(file_identity_v1_identity_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   27,
+			NumMessages:   36,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_identity_v1_identity_proto_goTypes,
 		DependencyIndexes: file_identity_v1_identity_proto_depIdxs,

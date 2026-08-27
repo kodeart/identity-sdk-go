@@ -48,6 +48,7 @@ type Client struct {
 	Config  ClientConfig
 	svcAuth pb.AuthServiceClient
 	svcUser pb.UserServiceClient
+	svcRole pb.RoleServiceClient
 	grpccon *grpc.ClientConn
 	natscon *nats.Conn
 }
@@ -122,6 +123,7 @@ func NewClient(cfg ClientConfig) (*Client, error) {
 		Config:  cfg,
 		svcAuth: pb.NewAuthServiceClient(conn),
 		svcUser: pb.NewUserServiceClient(conn),
+		svcRole: pb.NewRoleServiceClient(conn),
 		grpccon: conn,
 	}, nil
 }

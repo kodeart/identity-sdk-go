@@ -4,6 +4,7 @@ go 1.27
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.12-20260709200747-435963d16310.1
+	github.com/gobwas/glob v0.2.3
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/kodeart/go-problem/v2 v2.0.3
 	github.com/nats-io/nats.go v1.53.1
