@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/kodeart/go-problem/v2"
 	identity "github.com/kodeart/identity-sdk-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -17,16 +18,25 @@ func RequirePermission(perm string) func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			su := identity.GetUser(r.Context())
 			if su == nil {
-				http.Error(w, "unauthorized", http.StatusUnauthorized)
+				respondProblem(w, r, http.StatusUnauthorized, "not authenticated")
 				return
 			}
 			if !identity.Can(su, perm) {
-				http.Error(w, "forbidden", http.StatusForbidden)
+				respondProblem(w, r, http.StatusForbidden, "forbidden")
 				return
 			}
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func respondProblem(w http.ResponseWriter, r *http.Request, status int, detail string) {
+	problem.New().
+		WithStatus(status).
+		WithInstance(r.URL.String()).
+		WithTitle(http.StatusText(status)).
+		WithDetail(detail).
+		JSON(w)
 }
 
 // RequirePermissionGRPC is the same gate as a UnaryServerInterceptor: rejects
