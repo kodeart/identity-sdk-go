@@ -7,7 +7,7 @@ import (
 	pb "github.com/kodeart/identity-sdk-go/proto/identity/v1"
 )
 
-var compileCache sync.Map // pattern(string) -> glob.Glob
+var compileCache sync.Map // pattern(string) -> *glob.Pattern
 
 // Can reports whether the SessionUser holds perm, checking it against every
 // resolved permission glob in SessionUser.Permissions. "*" matches anything,
@@ -27,9 +27,9 @@ func Can(u *pb.SessionUser, perm string) bool {
 	return false
 }
 
-func compile(pattern string) (glob.Glob, bool) {
+func compile(pattern string) (*glob.Pattern, bool) {
 	if cached, ok := compileCache.Load(pattern); ok {
-		return cached.(glob.Glob), true
+		return cached.(*glob.Pattern), true
 	}
 	g, err := glob.Compile(pattern, '.')
 	if err != nil {
