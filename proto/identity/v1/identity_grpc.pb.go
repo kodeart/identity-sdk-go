@@ -19,11 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_SignInWithCredentials_FullMethodName = "/identity.v1.AuthService/SignInWithCredentials"
-	AuthService_SignInWithProvider_FullMethodName    = "/identity.v1.AuthService/SignInWithProvider"
-	AuthService_ValidateSession_FullMethodName       = "/identity.v1.AuthService/ValidateSession"
-	AuthService_RefreshToken_FullMethodName          = "/identity.v1.AuthService/RefreshToken"
-	AuthService_RevokeToken_FullMethodName           = "/identity.v1.AuthService/RevokeToken"
+	AuthService_SignInWithCredentials_FullMethodName  = "/identity.v1.AuthService/SignInWithCredentials"
+	AuthService_SignInWithProvider_FullMethodName     = "/identity.v1.AuthService/SignInWithProvider"
+	AuthService_ValidateSession_FullMethodName        = "/identity.v1.AuthService/ValidateSession"
+	AuthService_RefreshToken_FullMethodName           = "/identity.v1.AuthService/RefreshToken"
+	AuthService_RevokeToken_FullMethodName            = "/identity.v1.AuthService/RevokeToken"
+	AuthService_BeginMfaSignIn_FullMethodName         = "/identity.v1.AuthService/BeginMfaSignIn"
+	AuthService_CompleteMfaSignIn_FullMethodName      = "/identity.v1.AuthService/CompleteMfaSignIn"
+	AuthService_ListMfaFactors_FullMethodName         = "/identity.v1.AuthService/ListMfaFactors"
+	AuthService_BeginTOTPEnroll_FullMethodName        = "/identity.v1.AuthService/BeginTOTPEnroll"
+	AuthService_CompleteTOTPEnroll_FullMethodName     = "/identity.v1.AuthService/CompleteTOTPEnroll"
+	AuthService_BeginWebAuthnEnroll_FullMethodName    = "/identity.v1.AuthService/BeginWebAuthnEnroll"
+	AuthService_CompleteWebAuthnEnroll_FullMethodName = "/identity.v1.AuthService/CompleteWebAuthnEnroll"
+	AuthService_RemoveMfaFactor_FullMethodName        = "/identity.v1.AuthService/RemoveMfaFactor"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -35,6 +43,14 @@ type AuthServiceClient interface {
 	ValidateSession(ctx context.Context, in *ValidateSessionRequest, opts ...grpc.CallOption) (*SessionUser, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
+	BeginMfaSignIn(ctx context.Context, in *BeginMfaSignInRequest, opts ...grpc.CallOption) (*BeginMfaSignInResponse, error)
+	CompleteMfaSignIn(ctx context.Context, in *CompleteMfaSignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
+	ListMfaFactors(ctx context.Context, in *ListMfaFactorsRequest, opts ...grpc.CallOption) (*ListMfaFactorsResponse, error)
+	BeginTOTPEnroll(ctx context.Context, in *BeginTOTPEnrollRequest, opts ...grpc.CallOption) (*BeginTOTPEnrollResponse, error)
+	CompleteTOTPEnroll(ctx context.Context, in *CompleteTOTPEnrollRequest, opts ...grpc.CallOption) (*CompleteTOTPEnrollResponse, error)
+	BeginWebAuthnEnroll(ctx context.Context, in *BeginWebAuthnEnrollRequest, opts ...grpc.CallOption) (*BeginWebAuthnEnrollResponse, error)
+	CompleteWebAuthnEnroll(ctx context.Context, in *CompleteWebAuthnEnrollRequest, opts ...grpc.CallOption) (*CompleteWebAuthnEnrollResponse, error)
+	RemoveMfaFactor(ctx context.Context, in *RemoveMfaFactorRequest, opts ...grpc.CallOption) (*RemoveMfaFactorResponse, error)
 }
 
 type authServiceClient struct {
@@ -95,6 +111,86 @@ func (c *authServiceClient) RevokeToken(ctx context.Context, in *RevokeTokenRequ
 	return out, nil
 }
 
+func (c *authServiceClient) BeginMfaSignIn(ctx context.Context, in *BeginMfaSignInRequest, opts ...grpc.CallOption) (*BeginMfaSignInResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BeginMfaSignInResponse)
+	err := c.cc.Invoke(ctx, AuthService_BeginMfaSignIn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) CompleteMfaSignIn(ctx context.Context, in *CompleteMfaSignInRequest, opts ...grpc.CallOption) (*SignInResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SignInResponse)
+	err := c.cc.Invoke(ctx, AuthService_CompleteMfaSignIn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListMfaFactors(ctx context.Context, in *ListMfaFactorsRequest, opts ...grpc.CallOption) (*ListMfaFactorsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMfaFactorsResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListMfaFactors_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) BeginTOTPEnroll(ctx context.Context, in *BeginTOTPEnrollRequest, opts ...grpc.CallOption) (*BeginTOTPEnrollResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BeginTOTPEnrollResponse)
+	err := c.cc.Invoke(ctx, AuthService_BeginTOTPEnroll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) CompleteTOTPEnroll(ctx context.Context, in *CompleteTOTPEnrollRequest, opts ...grpc.CallOption) (*CompleteTOTPEnrollResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompleteTOTPEnrollResponse)
+	err := c.cc.Invoke(ctx, AuthService_CompleteTOTPEnroll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) BeginWebAuthnEnroll(ctx context.Context, in *BeginWebAuthnEnrollRequest, opts ...grpc.CallOption) (*BeginWebAuthnEnrollResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BeginWebAuthnEnrollResponse)
+	err := c.cc.Invoke(ctx, AuthService_BeginWebAuthnEnroll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) CompleteWebAuthnEnroll(ctx context.Context, in *CompleteWebAuthnEnrollRequest, opts ...grpc.CallOption) (*CompleteWebAuthnEnrollResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompleteWebAuthnEnrollResponse)
+	err := c.cc.Invoke(ctx, AuthService_CompleteWebAuthnEnroll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RemoveMfaFactor(ctx context.Context, in *RemoveMfaFactorRequest, opts ...grpc.CallOption) (*RemoveMfaFactorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RemoveMfaFactorResponse)
+	err := c.cc.Invoke(ctx, AuthService_RemoveMfaFactor_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -104,6 +200,14 @@ type AuthServiceServer interface {
 	ValidateSession(context.Context, *ValidateSessionRequest) (*SessionUser, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
+	BeginMfaSignIn(context.Context, *BeginMfaSignInRequest) (*BeginMfaSignInResponse, error)
+	CompleteMfaSignIn(context.Context, *CompleteMfaSignInRequest) (*SignInResponse, error)
+	ListMfaFactors(context.Context, *ListMfaFactorsRequest) (*ListMfaFactorsResponse, error)
+	BeginTOTPEnroll(context.Context, *BeginTOTPEnrollRequest) (*BeginTOTPEnrollResponse, error)
+	CompleteTOTPEnroll(context.Context, *CompleteTOTPEnrollRequest) (*CompleteTOTPEnrollResponse, error)
+	BeginWebAuthnEnroll(context.Context, *BeginWebAuthnEnrollRequest) (*BeginWebAuthnEnrollResponse, error)
+	CompleteWebAuthnEnroll(context.Context, *CompleteWebAuthnEnrollRequest) (*CompleteWebAuthnEnrollResponse, error)
+	RemoveMfaFactor(context.Context, *RemoveMfaFactorRequest) (*RemoveMfaFactorResponse, error)
 }
 
 // UnimplementedAuthServiceServer should be embedded to have
@@ -127,6 +231,30 @@ func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshToke
 }
 func (UnimplementedAuthServiceServer) RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeToken not implemented")
+}
+func (UnimplementedAuthServiceServer) BeginMfaSignIn(context.Context, *BeginMfaSignInRequest) (*BeginMfaSignInResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BeginMfaSignIn not implemented")
+}
+func (UnimplementedAuthServiceServer) CompleteMfaSignIn(context.Context, *CompleteMfaSignInRequest) (*SignInResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteMfaSignIn not implemented")
+}
+func (UnimplementedAuthServiceServer) ListMfaFactors(context.Context, *ListMfaFactorsRequest) (*ListMfaFactorsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMfaFactors not implemented")
+}
+func (UnimplementedAuthServiceServer) BeginTOTPEnroll(context.Context, *BeginTOTPEnrollRequest) (*BeginTOTPEnrollResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BeginTOTPEnroll not implemented")
+}
+func (UnimplementedAuthServiceServer) CompleteTOTPEnroll(context.Context, *CompleteTOTPEnrollRequest) (*CompleteTOTPEnrollResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteTOTPEnroll not implemented")
+}
+func (UnimplementedAuthServiceServer) BeginWebAuthnEnroll(context.Context, *BeginWebAuthnEnrollRequest) (*BeginWebAuthnEnrollResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BeginWebAuthnEnroll not implemented")
+}
+func (UnimplementedAuthServiceServer) CompleteWebAuthnEnroll(context.Context, *CompleteWebAuthnEnrollRequest) (*CompleteWebAuthnEnrollResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteWebAuthnEnroll not implemented")
+}
+func (UnimplementedAuthServiceServer) RemoveMfaFactor(context.Context, *RemoveMfaFactorRequest) (*RemoveMfaFactorResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveMfaFactor not implemented")
 }
 func (UnimplementedAuthServiceServer) testEmbeddedByValue() {}
 
@@ -238,6 +366,150 @@ func _AuthService_RevokeToken_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_BeginMfaSignIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginMfaSignInRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).BeginMfaSignIn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_BeginMfaSignIn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).BeginMfaSignIn(ctx, req.(*BeginMfaSignInRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_CompleteMfaSignIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteMfaSignInRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CompleteMfaSignIn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CompleteMfaSignIn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CompleteMfaSignIn(ctx, req.(*CompleteMfaSignInRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListMfaFactors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMfaFactorsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMfaFactors(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListMfaFactors_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMfaFactors(ctx, req.(*ListMfaFactorsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_BeginTOTPEnroll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginTOTPEnrollRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).BeginTOTPEnroll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_BeginTOTPEnroll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).BeginTOTPEnroll(ctx, req.(*BeginTOTPEnrollRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_CompleteTOTPEnroll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteTOTPEnrollRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CompleteTOTPEnroll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CompleteTOTPEnroll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CompleteTOTPEnroll(ctx, req.(*CompleteTOTPEnrollRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_BeginWebAuthnEnroll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginWebAuthnEnrollRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).BeginWebAuthnEnroll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_BeginWebAuthnEnroll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).BeginWebAuthnEnroll(ctx, req.(*BeginWebAuthnEnrollRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_CompleteWebAuthnEnroll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteWebAuthnEnrollRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CompleteWebAuthnEnroll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CompleteWebAuthnEnroll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CompleteWebAuthnEnroll(ctx, req.(*CompleteWebAuthnEnrollRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RemoveMfaFactor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMfaFactorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RemoveMfaFactor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RemoveMfaFactor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RemoveMfaFactor(ctx, req.(*RemoveMfaFactorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -264,6 +536,38 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RevokeToken",
 			Handler:    _AuthService_RevokeToken_Handler,
+		},
+		{
+			MethodName: "BeginMfaSignIn",
+			Handler:    _AuthService_BeginMfaSignIn_Handler,
+		},
+		{
+			MethodName: "CompleteMfaSignIn",
+			Handler:    _AuthService_CompleteMfaSignIn_Handler,
+		},
+		{
+			MethodName: "ListMfaFactors",
+			Handler:    _AuthService_ListMfaFactors_Handler,
+		},
+		{
+			MethodName: "BeginTOTPEnroll",
+			Handler:    _AuthService_BeginTOTPEnroll_Handler,
+		},
+		{
+			MethodName: "CompleteTOTPEnroll",
+			Handler:    _AuthService_CompleteTOTPEnroll_Handler,
+		},
+		{
+			MethodName: "BeginWebAuthnEnroll",
+			Handler:    _AuthService_BeginWebAuthnEnroll_Handler,
+		},
+		{
+			MethodName: "CompleteWebAuthnEnroll",
+			Handler:    _AuthService_CompleteWebAuthnEnroll_Handler,
+		},
+		{
+			MethodName: "RemoveMfaFactor",
+			Handler:    _AuthService_RemoveMfaFactor_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
