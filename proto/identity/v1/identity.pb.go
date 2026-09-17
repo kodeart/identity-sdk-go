@@ -682,6 +682,7 @@ type BeginTOTPEnrollResponse struct {
 	Secret        string                 `protobuf:"bytes,2,opt,name=secret,proto3" json:"secret,omitempty"`
 	AccountName   string                 `protobuf:"bytes,3,opt,name=accountName,proto3" json:"accountName,omitempty"`
 	OtpauthUri    string                 `protobuf:"bytes,4,opt,name=otpauthUri,proto3" json:"otpauthUri,omitempty"`
+	Image         []byte                 `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -742,6 +743,13 @@ func (x *BeginTOTPEnrollResponse) GetOtpauthUri() string {
 		return x.OtpauthUri
 	}
 	return ""
+}
+
+func (x *BeginTOTPEnrollResponse) GetImage() []byte {
+	if x != nil {
+		return x.Image
+	}
+	return nil
 }
 
 type CompleteTOTPEnrollRequest struct {
@@ -3463,14 +3471,15 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\x16ListMfaFactorsResponse\x120\n" +
 	"\afactors\x18\x01 \x03(\v2\x16.identity.v1.MfaFactorR\afactors\":\n" +
 	"\x16BeginTOTPEnrollRequest\x12 \n" +
-	"\aaccount\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\aaccount\"\x91\x01\n" +
+	"\aaccount\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\aaccount\"\xa7\x01\n" +
 	"\x17BeginTOTPEnrollResponse\x12\x1c\n" +
 	"\tpendingId\x18\x01 \x01(\tR\tpendingId\x12\x16\n" +
 	"\x06secret\x18\x02 \x01(\tR\x06secret\x12 \n" +
 	"\vaccountName\x18\x03 \x01(\tR\vaccountName\x12\x1e\n" +
 	"\n" +
 	"otpauthUri\x18\x04 \x01(\tR\n" +
-	"otpauthUri\"\x8f\x01\n" +
+	"otpauthUri\x12\x14\n" +
+	"\x05image\x18\x05 \x01(\fR\x05image\"\x8f\x01\n" +
 	"\x19CompleteTOTPEnrollRequest\x120\n" +
 	"\x0fcurrentPassword\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x0fcurrentPassword\x12$\n" +
 	"\tpendingId\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\tpendingId\x12\x1a\n" +
