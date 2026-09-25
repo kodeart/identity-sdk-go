@@ -22,8 +22,11 @@ func (c *Client) ListMfaFactors(ctx context.Context) ([]*pb.MfaFactor, error) {
 	return resp.GetFactors(), nil
 }
 
-func (c *Client) BeginTOTPEnroll(ctx context.Context, account string) (*pb.BeginTOTPEnrollResponse, error) {
-	return c.svcAuth.BeginTOTPEnroll(ctx, &pb.BeginTOTPEnrollRequest{Account: account})
+// BeginTOTPEnroll starts TOTP enrollment. The authenticator entry is labelled
+// with the signed-in user's email by the service; a custom label is typed
+// directly into the authenticator app, so there is no account parameter.
+func (c *Client) BeginTOTPEnroll(ctx context.Context) (*pb.BeginTOTPEnrollResponse, error) {
+	return c.svcAuth.BeginTOTPEnroll(ctx, &pb.BeginTOTPEnrollRequest{})
 }
 
 func (c *Client) CompleteTOTPEnroll(ctx context.Context, currentPassword, pendingID, code string) ([]string, error) {
@@ -38,9 +41,11 @@ func (c *Client) CompleteTOTPEnroll(ctx context.Context, currentPassword, pendin
 	return resp.GetBackupCodes(), nil
 }
 
-func (c *Client) BeginWebAuthnEnroll(ctx context.Context, account, displayName string) (*pb.BeginWebAuthnEnrollResponse, error) {
+// BeginWebAuthnEnroll starts passkey enrollment. The credential's user name
+// comes from the signed-in user's email; only the cosmetic display name is
+// passed through (empty falls back to the user's display name).
+func (c *Client) BeginWebAuthnEnroll(ctx context.Context, displayName string) (*pb.BeginWebAuthnEnrollResponse, error) {
 	return c.svcAuth.BeginWebAuthnEnroll(ctx, &pb.BeginWebAuthnEnrollRequest{
-		Account:     account,
 		DisplayName: displayName,
 	})
 }

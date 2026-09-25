@@ -634,8 +634,10 @@ func (x *ListMfaFactorsResponse) GetFactors() []*MfaFactor {
 
 type BeginTOTPEnrollRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Account label shown by the authenticator app. Optional: when omitted the
-	// service labels the entry with the signed-in user's email.
+	// Ignored. The authenticator entry is labelled with the signed-in user's
+	// email; a custom label is typed into the authenticator app itself.
+	//
+	// Deprecated: Marked as deprecated in identity/v1/identity.proto.
 	Account       string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -671,6 +673,7 @@ func (*BeginTOTPEnrollRequest) Descriptor() ([]byte, []int) {
 	return file_identity_v1_identity_proto_rawDescGZIP(), []int{9}
 }
 
+// Deprecated: Marked as deprecated in identity/v1/identity.proto.
 func (x *BeginTOTPEnrollRequest) GetAccount() string {
 	if x != nil {
 		return x.Account
@@ -860,8 +863,9 @@ func (x *CompleteTOTPEnrollResponse) GetBackupCodes() []string {
 
 type BeginWebAuthnEnrollRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Account name shown by the platform passkey UI. Optional: when omitted the
-	// service uses the signed-in user's email.
+	// Ignored. The passkey user name comes from the signed-in user's email.
+	//
+	// Deprecated: Marked as deprecated in identity/v1/identity.proto.
 	Account       string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
 	DisplayName   string `protobuf:"bytes,2,opt,name=displayName,proto3" json:"displayName,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -898,6 +902,7 @@ func (*BeginWebAuthnEnrollRequest) Descriptor() ([]byte, []int) {
 	return file_identity_v1_identity_proto_rawDescGZIP(), []int{13}
 }
 
+// Deprecated: Marked as deprecated in identity/v1/identity.proto.
 func (x *BeginWebAuthnEnrollRequest) GetAccount() string {
 	if x != nil {
 		return x.Account
@@ -3473,9 +3478,9 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\tuserAgent\x18\a \x01(\tR\tuserAgent\"\x17\n" +
 	"\x15ListMfaFactorsRequest\"J\n" +
 	"\x16ListMfaFactorsResponse\x120\n" +
-	"\afactors\x18\x01 \x03(\v2\x16.identity.v1.MfaFactorR\afactors\"2\n" +
-	"\x16BeginTOTPEnrollRequest\x12\x18\n" +
-	"\aaccount\x18\x01 \x01(\tR\aaccount\"\xa7\x01\n" +
+	"\afactors\x18\x01 \x03(\v2\x16.identity.v1.MfaFactorR\afactors\"6\n" +
+	"\x16BeginTOTPEnrollRequest\x12\x1c\n" +
+	"\aaccount\x18\x01 \x01(\tB\x02\x18\x01R\aaccount\"\xa7\x01\n" +
 	"\x17BeginTOTPEnrollResponse\x12\x1c\n" +
 	"\tpendingId\x18\x01 \x01(\tR\tpendingId\x12\x16\n" +
 	"\x06secret\x18\x02 \x01(\tR\x06secret\x12 \n" +
@@ -3489,9 +3494,9 @@ const file_identity_v1_identity_proto_rawDesc = "" +
 	"\tpendingId\x18\x02 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\tpendingId\x12\x1a\n" +
 	"\x04code\x18\x03 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x04code\">\n" +
 	"\x1aCompleteTOTPEnrollResponse\x12 \n" +
-	"\vbackupCodes\x18\x01 \x03(\tR\vbackupCodes\"X\n" +
-	"\x1aBeginWebAuthnEnrollRequest\x12\x18\n" +
-	"\aaccount\x18\x01 \x01(\tR\aaccount\x12 \n" +
+	"\vbackupCodes\x18\x01 \x03(\tR\vbackupCodes\"\\\n" +
+	"\x1aBeginWebAuthnEnrollRequest\x12\x1c\n" +
+	"\aaccount\x18\x01 \x01(\tB\x02\x18\x01R\aaccount\x12 \n" +
 	"\vdisplayName\x18\x02 \x01(\tR\vdisplayName\"v\n" +
 	"\x1bBeginWebAuthnEnrollResponse\x12 \n" +
 	"\vchallengeId\x18\x01 \x01(\tR\vchallengeId\x125\n" +
