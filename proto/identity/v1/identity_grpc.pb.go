@@ -27,6 +27,8 @@ const (
 	AuthService_BeginMfaSignIn_FullMethodName         = "/identity.v1.AuthService/BeginMfaSignIn"
 	AuthService_CompleteMfaSignIn_FullMethodName      = "/identity.v1.AuthService/CompleteMfaSignIn"
 	AuthService_ListMfaFactors_FullMethodName         = "/identity.v1.AuthService/ListMfaFactors"
+	AuthService_CountUnusedBackupCodes_FullMethodName = "/identity.v1.AuthService/CountUnusedBackupCodes"
+	AuthService_ReissueBackupCodes_FullMethodName     = "/identity.v1.AuthService/ReissueBackupCodes"
 	AuthService_BeginTOTPEnroll_FullMethodName        = "/identity.v1.AuthService/BeginTOTPEnroll"
 	AuthService_CompleteTOTPEnroll_FullMethodName     = "/identity.v1.AuthService/CompleteTOTPEnroll"
 	AuthService_BeginWebAuthnEnroll_FullMethodName    = "/identity.v1.AuthService/BeginWebAuthnEnroll"
@@ -46,6 +48,8 @@ type AuthServiceClient interface {
 	BeginMfaSignIn(ctx context.Context, in *BeginMfaSignInRequest, opts ...grpc.CallOption) (*BeginMfaSignInResponse, error)
 	CompleteMfaSignIn(ctx context.Context, in *CompleteMfaSignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	ListMfaFactors(ctx context.Context, in *ListMfaFactorsRequest, opts ...grpc.CallOption) (*ListMfaFactorsResponse, error)
+	CountUnusedBackupCodes(ctx context.Context, in *CountUnusedBackupCodesRequest, opts ...grpc.CallOption) (*CountUnusedBackupCodesResponse, error)
+	ReissueBackupCodes(ctx context.Context, in *ReissueBackupCodesRequest, opts ...grpc.CallOption) (*ReissueBackupCodesResponse, error)
 	BeginTOTPEnroll(ctx context.Context, in *BeginTOTPEnrollRequest, opts ...grpc.CallOption) (*BeginTOTPEnrollResponse, error)
 	CompleteTOTPEnroll(ctx context.Context, in *CompleteTOTPEnrollRequest, opts ...grpc.CallOption) (*CompleteTOTPEnrollResponse, error)
 	BeginWebAuthnEnroll(ctx context.Context, in *BeginWebAuthnEnrollRequest, opts ...grpc.CallOption) (*BeginWebAuthnEnrollResponse, error)
@@ -141,6 +145,26 @@ func (c *authServiceClient) ListMfaFactors(ctx context.Context, in *ListMfaFacto
 	return out, nil
 }
 
+func (c *authServiceClient) CountUnusedBackupCodes(ctx context.Context, in *CountUnusedBackupCodesRequest, opts ...grpc.CallOption) (*CountUnusedBackupCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CountUnusedBackupCodesResponse)
+	err := c.cc.Invoke(ctx, AuthService_CountUnusedBackupCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ReissueBackupCodes(ctx context.Context, in *ReissueBackupCodesRequest, opts ...grpc.CallOption) (*ReissueBackupCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReissueBackupCodesResponse)
+	err := c.cc.Invoke(ctx, AuthService_ReissueBackupCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) BeginTOTPEnroll(ctx context.Context, in *BeginTOTPEnrollRequest, opts ...grpc.CallOption) (*BeginTOTPEnrollResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BeginTOTPEnrollResponse)
@@ -203,6 +227,8 @@ type AuthServiceServer interface {
 	BeginMfaSignIn(context.Context, *BeginMfaSignInRequest) (*BeginMfaSignInResponse, error)
 	CompleteMfaSignIn(context.Context, *CompleteMfaSignInRequest) (*SignInResponse, error)
 	ListMfaFactors(context.Context, *ListMfaFactorsRequest) (*ListMfaFactorsResponse, error)
+	CountUnusedBackupCodes(context.Context, *CountUnusedBackupCodesRequest) (*CountUnusedBackupCodesResponse, error)
+	ReissueBackupCodes(context.Context, *ReissueBackupCodesRequest) (*ReissueBackupCodesResponse, error)
 	BeginTOTPEnroll(context.Context, *BeginTOTPEnrollRequest) (*BeginTOTPEnrollResponse, error)
 	CompleteTOTPEnroll(context.Context, *CompleteTOTPEnrollRequest) (*CompleteTOTPEnrollResponse, error)
 	BeginWebAuthnEnroll(context.Context, *BeginWebAuthnEnrollRequest) (*BeginWebAuthnEnrollResponse, error)
@@ -240,6 +266,12 @@ func (UnimplementedAuthServiceServer) CompleteMfaSignIn(context.Context, *Comple
 }
 func (UnimplementedAuthServiceServer) ListMfaFactors(context.Context, *ListMfaFactorsRequest) (*ListMfaFactorsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMfaFactors not implemented")
+}
+func (UnimplementedAuthServiceServer) CountUnusedBackupCodes(context.Context, *CountUnusedBackupCodesRequest) (*CountUnusedBackupCodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CountUnusedBackupCodes not implemented")
+}
+func (UnimplementedAuthServiceServer) ReissueBackupCodes(context.Context, *ReissueBackupCodesRequest) (*ReissueBackupCodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReissueBackupCodes not implemented")
 }
 func (UnimplementedAuthServiceServer) BeginTOTPEnroll(context.Context, *BeginTOTPEnrollRequest) (*BeginTOTPEnrollResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method BeginTOTPEnroll not implemented")
@@ -420,6 +452,42 @@ func _AuthService_ListMfaFactors_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_CountUnusedBackupCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CountUnusedBackupCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CountUnusedBackupCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CountUnusedBackupCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CountUnusedBackupCodes(ctx, req.(*CountUnusedBackupCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ReissueBackupCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReissueBackupCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ReissueBackupCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ReissueBackupCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ReissueBackupCodes(ctx, req.(*ReissueBackupCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_BeginTOTPEnroll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BeginTOTPEnrollRequest)
 	if err := dec(in); err != nil {
@@ -548,6 +616,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMfaFactors",
 			Handler:    _AuthService_ListMfaFactors_Handler,
+		},
+		{
+			MethodName: "CountUnusedBackupCodes",
+			Handler:    _AuthService_CountUnusedBackupCodes_Handler,
+		},
+		{
+			MethodName: "ReissueBackupCodes",
+			Handler:    _AuthService_ReissueBackupCodes_Handler,
 		},
 		{
 			MethodName: "BeginTOTPEnroll",

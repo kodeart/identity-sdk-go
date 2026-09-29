@@ -22,6 +22,30 @@ func (c *Client) ListMfaFactors(ctx context.Context) ([]*pb.MfaFactor, error) {
 	return resp.GetFactors(), nil
 }
 
+// CountUnusedBackupCodes reports how many recovery codes the signed-in user
+// still holds, so a client can warn a user who has burned through them.
+func (c *Client) CountUnusedBackupCodes(ctx context.Context) (int, error) {
+	resp, err := c.svcAuth.CountUnusedBackupCodes(ctx, &pb.CountUnusedBackupCodesRequest{})
+	if err != nil {
+		return 0, err
+	}
+	return int(resp.GetBackupCodesLeft()), nil
+}
+
+// ReissueBackupCodes hands the signed-in user a fresh batch of recovery codes
+// and destroys the old ones. It is gated on the current password: it is the one
+// call that destroys working credentials, so a stolen session must not be able
+// to rotate the codes out from under its owner.
+func (c *Client) ReissueBackupCodes(ctx context.Context, currentPassword string) ([]string, error) {
+	resp, err := c.svcAuth.ReissueBackupCodes(ctx, &pb.ReissueBackupCodesRequest{
+		CurrentPassword: currentPassword,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.GetBackupCodes(), nil
+}
+
 // BeginTOTPEnroll starts TOTP enrollment. The authenticator entry is labelled
 // with the signed-in user's email by the service; a custom label is typed
 // directly into the authenticator app, so there is no account parameter.
