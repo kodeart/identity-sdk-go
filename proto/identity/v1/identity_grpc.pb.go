@@ -664,6 +664,7 @@ const (
 	UserService_ResetPasswordWithBackupCode_FullMethodName = "/identity.v1.UserService/ResetPasswordWithBackupCode"
 	UserService_RequestEmailChange_FullMethodName          = "/identity.v1.UserService/RequestEmailChange"
 	UserService_ConfirmEmailChange_FullMethodName          = "/identity.v1.UserService/ConfirmEmailChange"
+	UserService_AdminResetFactors_FullMethodName           = "/identity.v1.UserService/AdminResetFactors"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -683,6 +684,7 @@ type UserServiceClient interface {
 	ResetPasswordWithBackupCode(ctx context.Context, in *ResetPasswordWithBackupCodeRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	RequestEmailChange(ctx context.Context, in *RequestEmailChangeRequest, opts ...grpc.CallOption) (*RequestEmailChangeResponse, error)
 	ConfirmEmailChange(ctx context.Context, in *ConfirmEmailChangeRequest, opts ...grpc.CallOption) (*ConfirmEmailChangeResponse, error)
+	AdminResetFactors(ctx context.Context, in *AdminResetFactorsRequest, opts ...grpc.CallOption) (*AdminResetFactorsResponse, error)
 }
 
 type userServiceClient struct {
@@ -823,6 +825,16 @@ func (c *userServiceClient) ConfirmEmailChange(ctx context.Context, in *ConfirmE
 	return out, nil
 }
 
+func (c *userServiceClient) AdminResetFactors(ctx context.Context, in *AdminResetFactorsRequest, opts ...grpc.CallOption) (*AdminResetFactorsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminResetFactorsResponse)
+	err := c.cc.Invoke(ctx, UserService_AdminResetFactors_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -840,6 +852,7 @@ type UserServiceServer interface {
 	ResetPasswordWithBackupCode(context.Context, *ResetPasswordWithBackupCodeRequest) (*ResetPasswordResponse, error)
 	RequestEmailChange(context.Context, *RequestEmailChangeRequest) (*RequestEmailChangeResponse, error)
 	ConfirmEmailChange(context.Context, *ConfirmEmailChangeRequest) (*ConfirmEmailChangeResponse, error)
+	AdminResetFactors(context.Context, *AdminResetFactorsRequest) (*AdminResetFactorsResponse, error)
 }
 
 // UnimplementedUserServiceServer should be embedded to have
@@ -887,6 +900,9 @@ func (UnimplementedUserServiceServer) RequestEmailChange(context.Context, *Reque
 }
 func (UnimplementedUserServiceServer) ConfirmEmailChange(context.Context, *ConfirmEmailChangeRequest) (*ConfirmEmailChangeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ConfirmEmailChange not implemented")
+}
+func (UnimplementedUserServiceServer) AdminResetFactors(context.Context, *AdminResetFactorsRequest) (*AdminResetFactorsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminResetFactors not implemented")
 }
 func (UnimplementedUserServiceServer) testEmbeddedByValue() {}
 
@@ -1142,6 +1158,24 @@ func _UserService_ConfirmEmailChange_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AdminResetFactors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminResetFactorsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AdminResetFactors(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_AdminResetFactors_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AdminResetFactors(ctx, req.(*AdminResetFactorsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1200,6 +1234,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmEmailChange",
 			Handler:    _UserService_ConfirmEmailChange_Handler,
+		},
+		{
+			MethodName: "AdminResetFactors",
+			Handler:    _UserService_AdminResetFactors_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

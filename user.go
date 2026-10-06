@@ -80,3 +80,11 @@ func (c *Client) ChangeEmail(ctx context.Context, userId, currentPassword, newEm
 func (c *Client) InitiatePasswordReset(ctx context.Context, email string) (*pb.PasswordResetResponse, error) {
 	return c.svcUser.InitiatePasswordReset(ctx, &pb.PasswordResetRequest{Email: email})
 }
+
+// AdminResetFactors clears the target's MFA factors and recovery codes and
+// revokes their sessions. The caller must hold the user.reset permission; the
+// target is a factor id or a user id.
+func (c *Client) AdminResetFactors(ctx context.Context, mfaId string) error {
+	_, err := c.svcUser.AdminResetFactors(ctx, &pb.AdminResetFactorsRequest{MfaId: mfaId})
+	return err
+}
