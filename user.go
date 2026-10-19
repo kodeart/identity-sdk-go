@@ -27,7 +27,7 @@ func (c *Client) ListUsers(ctx context.Context, size int32, page, sort string) (
 	return resp.GetUsers(), resp.GetNext(), nil
 }
 
-func (c *Client) CreateUser(ctx context.Context, email, password, displayName string, roles []string, externalId string) (*pb.User, error) {
+func (c *Client) CreateUser(ctx context.Context, email, password, displayName string, roles, permissions, exclusions []string, externalId string) (*pb.User, error) {
 	resp, err := c.svcUser.Create(ctx, &pb.CreateUserRequest{
 		Credentials: &pb.UserCredentials{
 			Email:    email,
@@ -35,12 +35,25 @@ func (c *Client) CreateUser(ctx context.Context, email, password, displayName st
 		},
 		DisplayName: displayName,
 		Roles:       roles,
+		Permissions: permissions,
+		Exclusions:  exclusions,
 		ExternalId:  externalId,
 	})
 	if err != nil {
 		return nil, err
 	}
 	return resp.GetUser(), nil
+}
+
+// GetUserPermissions resolves the user's effective permission set: role
+// permissions (incl. parent-chain inheritance) plus per-user grants, minus
+// per-user exclusions.
+func (c *Client) GetUserPermissions(ctx context.Context, userId string) ([]string, error) {
+	resp, err := c.svcUser.GetUserPermissions(ctx, &pb.GetUserRequest{UserId: userId})
+	if err != nil {
+		return nil, err
+	}
+	return resp.GetPermissions(), nil
 }
 
 func (c *Client) UpdateUser(ctx context.Context, userId string, user *pb.User, updateMask []string) (*pb.User, error) {
