@@ -656,6 +656,8 @@ const (
 	UserService_Create_FullMethodName                      = "/identity.v1.UserService/Create"
 	UserService_Update_FullMethodName                      = "/identity.v1.UserService/Update"
 	UserService_Delete_FullMethodName                      = "/identity.v1.UserService/Delete"
+	UserService_Block_FullMethodName                       = "/identity.v1.UserService/Block"
+	UserService_Unblock_FullMethodName                     = "/identity.v1.UserService/Unblock"
 	UserService_List_FullMethodName                        = "/identity.v1.UserService/List"
 	UserService_ChangePassword_FullMethodName              = "/identity.v1.UserService/ChangePassword"
 	UserService_ChangeEmail_FullMethodName                 = "/identity.v1.UserService/ChangeEmail"
@@ -677,6 +679,8 @@ type UserServiceClient interface {
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	Delete(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	Block(ctx context.Context, in *BlockUserRequest, opts ...grpc.CallOption) (*BlockUserResponse, error)
+	Unblock(ctx context.Context, in *UnblockUserRequest, opts ...grpc.CallOption) (*UnblockUserResponse, error)
 	List(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	ChangeEmail(ctx context.Context, in *ChangeEmailRequest, opts ...grpc.CallOption) (*ChangeEmailResponse, error)
@@ -741,6 +745,26 @@ func (c *userServiceClient) Delete(ctx context.Context, in *DeleteUserRequest, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteUserResponse)
 	err := c.cc.Invoke(ctx, UserService_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) Block(ctx context.Context, in *BlockUserRequest, opts ...grpc.CallOption) (*BlockUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BlockUserResponse)
+	err := c.cc.Invoke(ctx, UserService_Block_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) Unblock(ctx context.Context, in *UnblockUserRequest, opts ...grpc.CallOption) (*UnblockUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnblockUserResponse)
+	err := c.cc.Invoke(ctx, UserService_Unblock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -856,6 +880,8 @@ type UserServiceServer interface {
 	Create(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	Delete(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
+	Block(context.Context, *BlockUserRequest) (*BlockUserResponse, error)
+	Unblock(context.Context, *UnblockUserRequest) (*UnblockUserResponse, error)
 	List(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	ChangeEmail(context.Context, *ChangeEmailRequest) (*ChangeEmailResponse, error)
@@ -889,6 +915,12 @@ func (UnimplementedUserServiceServer) Update(context.Context, *UpdateUserRequest
 }
 func (UnimplementedUserServiceServer) Delete(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedUserServiceServer) Block(context.Context, *BlockUserRequest) (*BlockUserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Block not implemented")
+}
+func (UnimplementedUserServiceServer) Unblock(context.Context, *UnblockUserRequest) (*UnblockUserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Unblock not implemented")
 }
 func (UnimplementedUserServiceServer) List(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
@@ -1026,6 +1058,42 @@ func _UserService_Delete_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Delete(ctx, req.(*DeleteUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_Block_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Block(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_Block_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Block(ctx, req.(*BlockUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_Unblock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnblockUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Unblock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_Unblock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Unblock(ctx, req.(*UnblockUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1236,6 +1304,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _UserService_Delete_Handler,
+		},
+		{
+			MethodName: "Block",
+			Handler:    _UserService_Block_Handler,
+		},
+		{
+			MethodName: "Unblock",
+			Handler:    _UserService_Unblock_Handler,
 		},
 		{
 			MethodName: "List",
